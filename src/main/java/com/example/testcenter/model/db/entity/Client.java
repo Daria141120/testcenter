@@ -1,6 +1,7 @@
 package com.example.testcenter.model.db.entity;
 
 
+import com.example.testcenter.model.enums.ClientStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,8 +30,9 @@ public class Client {
     @Column(name = "middle_name")
     private String middleName;
 
-
-
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ClientStatus status;
 
 
 

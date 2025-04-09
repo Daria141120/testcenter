@@ -4,16 +4,26 @@ spring:
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: never  # для заполнения
 
   jpa:
     database: postgresql
     show-sql: false
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           lob:
             non_contextual_creation: true
+
+    defer:
+      datasource:
+        initialization: true  # для заполнения
+
+
+
