@@ -3,6 +3,7 @@ package com.example.testcenter.model.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -16,10 +17,12 @@ import lombok.experimental.SuperBuilder;
 //@JsonIgnoreProperties(ignoreUnknown = true)
 public class ClientInfoReq {
 
-    @NotEmpty
+    @NotEmpty (message = "Email должен быть заполнен")
+    @Email (message = "должен иметь формат адреса электронной почты")
     @Schema(description = "email")
     private String email;
 
+    @NotEmpty (message = "Телефон должен быть заполнен")
     @Schema(description = "Телефон")
     private String phone;
 

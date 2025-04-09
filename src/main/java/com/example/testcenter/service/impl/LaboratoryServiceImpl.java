@@ -33,14 +33,13 @@ public class LaboratoryServiceImpl implements LaboratoryService {
 
     @Override
     public LaboratoryInfoResp getLaboratory(Long id) {
-        Laboratory laboratory = getLaboratoryFromDB(id);
-        return objectMapper.convertValue(laboratory, LaboratoryInfoResp.class);
+        Laboratory laboratoryFromDB = getLaboratoryFromDB(id);
+        return objectMapper.convertValue(laboratoryFromDB, LaboratoryInfoResp.class);
     }
 
     @Override
     public LaboratoryInfoResp addLaboratory(LaboratoryInfoReq laboratoryInfoReq) {
         laboratoryRepository.findFirstByName(laboratoryInfoReq.getName()).ifPresent(
-
                 lab -> {throw new CommonBackendException("Laboratory already exist", HttpStatus.CONFLICT);
                 });
 
@@ -83,7 +82,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     @Override
     public List<LaboratoryInfoResp> getAllLaboratory() {
         return laboratoryRepository.findAll().stream().map(lab -> objectMapper.convertValue(lab, LaboratoryInfoResp.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 

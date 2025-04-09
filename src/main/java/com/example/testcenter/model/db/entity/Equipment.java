@@ -1,5 +1,6 @@
 package com.example.testcenter.model.db.entity;
 
+import com.example.testcenter.model.enums.EquipStatus;
 import com.example.testcenter.model.enums.TypeEquipment;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,6 +21,10 @@ public class Equipment {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private TypeEquipment typeEquipment;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private EquipStatus status;
 
 
 }
