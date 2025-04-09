@@ -54,6 +54,7 @@
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.7.0</version>
 		</dependency>
+
 <!--		<dependency>-->
 <!--			<groupId>org.mapstruct</groupId>-->
 <!--			<artifactId>mapstruct</artifactId>-->
@@ -100,6 +101,7 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 
