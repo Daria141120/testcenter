@@ -5,3 +5,9 @@ INSERT INTO clients (email, phone, first_name, last_name, middle_name, status) V
 INSERT INTO laboratories (name, description, status) VALUES
 ('climate', 'climate tests', 'CREATED'),
 ('vibration', 'vibration testing', 'CREATED');
+
+INSERT INTO equipments (name, type, status) VALUES
+('spectrum analyzer', 'RADIOENG', 'CREATED'),
+('pulse generator', 'RADIOENG', 'CREATED'),
+('digital ECG system', 'MEDICAL', 'CREATED'),
+('defibrillator', 'MEDICAL', 'CREATED');

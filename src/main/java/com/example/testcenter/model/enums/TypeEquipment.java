@@ -6,11 +6,18 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum TypeEquipment {
-    INSTRUMENTATION("КИП"),
-    RADIOENG("Радиотехническое оборудование"),
-    ELECTRICAL("Электрооборудование"),
-    MEDICAL("Медицинское оборудование");
+//    INSTRUMENTATION("КИП"),
+//    RADIOENG("Радиотехническое оборудование"),
+//    ELECTRICAL("Электрооборудование"),
+//    MEDICAL("Медицинское оборудование");
+//
+//    private final String name;
 
-    private final String name;
+
+    INSTRUMENTATION,
+    RADIOENG,
+    ELECTRICAL,
+    MEDICAL;
+
 
 }
