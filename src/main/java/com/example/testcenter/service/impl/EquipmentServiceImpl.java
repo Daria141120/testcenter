@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,7 +36,8 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public EquipmentInfoResp getEquipment(Long id) {
         Equipment equipmentFromDB = getEquipmentFromDB(id);
-        return objectMapper.convertValue(equipmentFromDB, EquipmentInfoResp.class);
+        var x = objectMapper.convertValue(equipmentFromDB, EquipmentInfoResp.class);
+        return x;
     }
 
 
@@ -76,6 +78,6 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public List<EquipmentInfoResp> getAllEquipment() {
         return equipmentRepository.findAll().stream().map(equip -> objectMapper.convertValue(equip, EquipmentInfoResp.class))
-                .toList();
+                .collect(Collectors.toList());
     }
 }

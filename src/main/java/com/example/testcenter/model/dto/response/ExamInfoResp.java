@@ -1,6 +1,6 @@
 package com.example.testcenter.model.dto.response;
 
-import com.example.testcenter.model.dto.request.EquipmentInfoReq;
+import com.example.testcenter.model.dto.request.ExamInfoReq;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -15,11 +15,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class EquipmentInfoResp extends EquipmentInfoReq {
+//@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ExamInfoResp extends ExamInfoReq{
 
     @Schema(description = "id")
     private Long id;
-
 
 }

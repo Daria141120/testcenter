@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   sql:
     init:
-      mode: always  # для заполнения
+      mode: never  # для заполнения
 
   jpa:
     database: postgresql

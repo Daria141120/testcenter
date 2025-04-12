@@ -6,7 +6,7 @@ import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
 import com.example.testcenter.service.LaboratoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +28,13 @@ public class LaboratoryController {
 
     @PostMapping
     @Operation(summary = "Добавить лабораторию")
-    public LaboratoryInfoResp addClient(@RequestBody @Valid LaboratoryInfoReq laboratoryInfoReq){
+    public LaboratoryInfoResp addLaboratory(@RequestBody @Valid LaboratoryInfoReq laboratoryInfoReq){
         return laboratoryService.addLaboratory(laboratoryInfoReq);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Обновить даннные лаборатории по id")
-    public LaboratoryInfoResp updateClient(@PathVariable ("id") Long id, @RequestBody LaboratoryInfoReq laboratoryInfoReq){
+    public LaboratoryInfoResp updateLaboratory(@PathVariable ("id") Long id, @RequestBody LaboratoryInfoReq laboratoryInfoReq){
         return laboratoryService.updateLaboratory(id, laboratoryInfoReq);
     }
 

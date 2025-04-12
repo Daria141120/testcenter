@@ -1,14 +1,15 @@
 package com.example.testcenter.model.dto.request;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
 import io.swagger.v3.oas.annotations.media.Schema;
-import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 
 @Getter
@@ -16,15 +17,16 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-//@ToString
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class LaboratoryInfoReq {
+public class ExamInfoReq {
 
     @NotEmpty
     @Schema(description = "Название")
     private String name;
 
-    @Schema(description = "Описание")
-    private String description;
+    @NotNull(message = "Лаборатория должна быть заполнена")
+    @Schema(description = "Испытательная лаборатория")
+    private LaboratoryInfoResp laboratory;
+
+
 
 }

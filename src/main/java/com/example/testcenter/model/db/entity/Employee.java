@@ -2,7 +2,7 @@ package com.example.testcenter.model.db.entity;
 
 
 import com.example.testcenter.model.enums.Post;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 

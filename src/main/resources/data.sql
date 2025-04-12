@@ -11,3 +11,8 @@ INSERT INTO equipments (name, type, status) VALUES
 ('pulse generator', 'RADIOENG', 'CREATED'),
 ('digital ECG system', 'MEDICAL', 'CREATED'),
 ('defibrillator', 'MEDICAL', 'CREATED');
+
+INSERT INTO exams (name, laboratory_id, status) VALUES
+('calibration', 1, 'CREATED'),
+('percussion', 1, 'CREATED'),
+('tightness', 2, 'CREATED');

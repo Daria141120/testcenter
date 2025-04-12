@@ -25,7 +25,8 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     private final ObjectMapper objectMapper;
     private final LaboratoryRepository laboratoryRepository;
 
-    private Laboratory getLaboratoryFromDB (Long id){
+    @Override
+    public Laboratory getLaboratoryFromDB(Long id){
         Optional<Laboratory> laboratoryFromDB = laboratoryRepository.findById(id);
         final String errMsg = String.format("laboratory with id : %s not found", id);
         return laboratoryFromDB.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
@@ -81,8 +82,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
 
     @Override
     public List<LaboratoryInfoResp> getAllLaboratory() {
-        return laboratoryRepository.findAll().stream().map(lab -> objectMapper.convertValue(lab, LaboratoryInfoResp.class))
-                .toList();
+        return laboratoryRepository.findAll().stream().map(lab -> objectMapper.convertValue(lab, LaboratoryInfoResp.class)).collect(Collectors.toList());
     }
 
 

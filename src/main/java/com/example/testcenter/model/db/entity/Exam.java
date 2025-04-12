@@ -1,7 +1,10 @@
 package com.example.testcenter.model.db.entity;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+
+import com.example.testcenter.model.enums.ClientStatus;
+import com.example.testcenter.model.enums.ExamStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,9 +21,13 @@ public class Exam {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "laboratory_id")
     private Laboratory laboratory;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ExamStatus status;
 
 
 }

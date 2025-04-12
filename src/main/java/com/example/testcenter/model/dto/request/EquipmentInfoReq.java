@@ -1,8 +1,9 @@
 package com.example.testcenter.model.dto.request;
 
 import com.example.testcenter.model.enums.TypeEquipment;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 //@ToString
-//@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EquipmentInfoReq {
 
     @NotEmpty
@@ -24,6 +25,6 @@ public class EquipmentInfoReq {
     private String name;
 
     @Schema(description = "Тип")
-    private TypeEquipment type;
+    private TypeEquipment typeEquipment;
 
 }
