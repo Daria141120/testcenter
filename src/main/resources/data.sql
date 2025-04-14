@@ -1,18 +1,22 @@
-INSERT INTO clients (email, phone, first_name, last_name, middle_name, status) VALUES
-('test1@ya.ru', '89241234567', 'Иван', 'Иванов', 'Иванович', 'CREATED'),
-('test2@ya.ru', '89240000000', 'Петр', 'Иванов', 'Петрович', 'CREATED');
+--INSERT INTO clients (email, phone, first_name, last_name, middle_name, status) VALUES
+--('test1@ya.ru', '89241234567', 'Иван', 'Иванов', 'Иванович', 'CREATED'),
+--('test2@ya.ru', '89240000000', 'Петр', 'Иванов', 'Петрович', 'CREATED');
+--
+--INSERT INTO laboratories (name, description, status) VALUES
+--('climate', 'climate tests', 'CREATED'),
+--('vibration', 'vibration testing', 'CREATED');
+--
+--INSERT INTO equipments (name, type, status) VALUES
+--('spectrum analyzer', 'RADIOENG', 'CREATED'),
+--('pulse generator', 'RADIOENG', 'CREATED'),
+--('digital ECG system', 'MEDICAL', 'CREATED'),
+--('defibrillator', 'MEDICAL', 'CREATED');
+--
+--INSERT INTO exams (name, laboratory_id, status) VALUES
+--('calibration', 1, 'CREATED'),
+--('percussion', 1, 'CREATED'),
+--('tightness', 2, 'CREATED');
 
-INSERT INTO laboratories (name, description, status) VALUES
-('climate', 'climate tests', 'CREATED'),
-('vibration', 'vibration testing', 'CREATED');
-
-INSERT INTO equipments (name, type, status) VALUES
-('spectrum analyzer', 'RADIOENG', 'CREATED'),
-('pulse generator', 'RADIOENG', 'CREATED'),
-('digital ECG system', 'MEDICAL', 'CREATED'),
-('defibrillator', 'MEDICAL', 'CREATED');
-
-INSERT INTO exams (name, laboratory_id, status) VALUES
-('calibration', 1, 'CREATED'),
-('percussion', 1, 'CREATED'),
-('tightness', 2, 'CREATED');
+--INSERT INTO employees (email, first_name, last_name, middle_name, post, laboratory_id, status) VALUES
+--('exam-center-e1@ya.ru', 'Ирина', 'Олеговна', 'Катина', 'LAB_TECH', 1, 'CREATED'),
+--('exam-center-e2@ya.ru', 'Светлана', 'Игоревна', 'Мишина', 'LAB_ASSISTANT', 2, 'CREATED');

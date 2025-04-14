@@ -29,7 +29,7 @@ public class ExamServiceImpl implements ExamService {
     private final ObjectMapper objectMapper;
     private final LaboratoryService laboratoryService;
 
-    public Exam getExamFromDB(Long id) {
+    private Exam getExamFromDB(Long id) {
         Optional<Exam>  examFromDB = examRepository.findById(id);
         final String errMsg = String.format("exam with id : %s not found", id);
         return examFromDB.orElseThrow(() ->  new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));

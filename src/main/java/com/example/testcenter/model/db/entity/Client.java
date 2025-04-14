@@ -36,5 +36,4 @@ public class Client {
     private ClientStatus status;
 
 
-
 }

@@ -1,6 +1,6 @@
 package com.example.testcenter.model.db.entity;
 
-
+import com.example.testcenter.model.enums.EmployeeStatus;
 import com.example.testcenter.model.enums.Post;
 import javax.persistence.*;
 import lombok.Getter;
@@ -16,6 +16,9 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "first_name")
     private String firstName;
 
@@ -29,8 +32,12 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Post post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "laboratory_id")
     private Laboratory laboratory;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private EmployeeStatus status;
 
 }
