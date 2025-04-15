@@ -54,7 +54,7 @@ public class LaboratoryController {
     }
 
     @GetMapping("/{id}/employees")
-    @Operation(summary = "Получить сотрудников лаборатории по id")
+    @Operation(summary = "Получить сотрудников лаборатории")
     public List<EmployeeInfoResp> getLaboratoryEmployees (@PathVariable ("id") Long id){
         return laboratoryService.getLaboratoryEmployees(id);
     }

@@ -3,6 +3,9 @@ package com.example.testcenter.model.db.entity;
 import com.example.testcenter.model.enums.EmployeeStatus;
 import com.example.testcenter.model.enums.Post;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "employees")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Employee {
 
     @Id
@@ -38,6 +42,7 @@ public class Employee {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "laboratory_id")
+    @JsonBackReference
     private Laboratory laboratory;
 
 }

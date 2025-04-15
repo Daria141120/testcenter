@@ -8,7 +8,6 @@ import com.example.testcenter.model.dto.request.LaboratoryInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
 import com.example.testcenter.model.enums.LaboratoryStatus;
-import com.example.testcenter.service.EmployeeService;
 import com.example.testcenter.service.LaboratoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ public class LaboratoryServiceImpl implements LaboratoryService {
 
     private final ObjectMapper objectMapper;
     private final LaboratoryRepository laboratoryRepository;
-    private final EmployeeService employeeService;
 
     @Override
     public Laboratory getLaboratoryFromDB(Long id){
@@ -93,10 +91,21 @@ public class LaboratoryServiceImpl implements LaboratoryService {
 
     @Override
     public List<EmployeeInfoResp> getLaboratoryEmployees(Long id) {
-        List <Employee> employeeList = employeeService.getEmployeesByLabId(id);
+        Laboratory laboratory = getLaboratoryFromDB(id);
+        LaboratoryInfoResp laboratoryInfoResp = objectMapper.convertValue(laboratory, LaboratoryInfoResp.class);
 
-        return employeeList.stream().map(employee -> objectMapper.convertValue(employee, EmployeeInfoResp.class))
+        List <Employee> employeeList = laboratory.getEmployeeList();
+        List <EmployeeInfoResp> infoRespList = employeeList.stream().
+                map(employee -> objectMapper.convertValue(employee, EmployeeInfoResp.class))
                 .collect(Collectors.toList());
+
+        infoRespList.forEach(employeeInfoResp -> employeeInfoResp.setLaboratory(laboratoryInfoResp));
+        return infoRespList;
+    }
+
+    @Override
+    public void updateLabListEmployee(Laboratory laboratory){
+        laboratoryRepository.save(laboratory);
     }
 
 

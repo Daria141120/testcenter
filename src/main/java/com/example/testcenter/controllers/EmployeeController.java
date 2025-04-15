@@ -5,6 +5,7 @@ import com.example.testcenter.model.dto.request.ClientInfoReq;
 import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.response.ClientInfoResp;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
+import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
 import com.example.testcenter.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,6 +56,10 @@ public class EmployeeController {
         return employeeService.getAllEmployee();
     }
 
-
+    @PutMapping("/{id}/changeLab")
+    @Operation(summary = "Сменить лабораторию")
+    public EmployeeInfoResp changeLab(@PathVariable("id") Long id, @RequestBody LaboratoryInfoResp lab) {
+        return employeeService.changeLab(id, lab);
+    }
 
 }

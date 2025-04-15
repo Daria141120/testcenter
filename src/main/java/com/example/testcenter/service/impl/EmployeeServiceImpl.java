@@ -3,11 +3,15 @@ package com.example.testcenter.service.impl;
 
 import com.example.testcenter.exception.CommonBackendException;
 import com.example.testcenter.model.db.entity.Employee;
+import com.example.testcenter.model.db.entity.Laboratory;
 import com.example.testcenter.model.db.repository.EmployeeRepository;
 import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
+import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
 import com.example.testcenter.model.enums.EmployeeStatus;
+import com.example.testcenter.model.enums.LaboratoryStatus;
 import com.example.testcenter.service.EmployeeService;
+import com.example.testcenter.service.LaboratoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +29,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final ObjectMapper objectMapper;
-  //  private final LaboratoryService laboratoryService;
+    private final LaboratoryService laboratoryService;
 
     private Employee getEmployeeFromDB (Long id){
         Optional <Employee> employeeFromDB = employeeRepository.findById(id);
@@ -36,7 +40,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeInfoResp getEmployee(Long id) {
         Employee employeeFromDB = getEmployeeFromDB(id);
-        return objectMapper.convertValue(employeeFromDB, EmployeeInfoResp.class);
+        EmployeeInfoResp employeeInfoResp = objectMapper.convertValue(employeeFromDB, EmployeeInfoResp.class);
+
+        employeeInfoResp.setLaboratory(objectMapper.convertValue(employeeFromDB.getLaboratory(), LaboratoryInfoResp.class));
+
+        return employeeInfoResp;
     }
 
 
@@ -47,23 +55,28 @@ public class EmployeeServiceImpl implements EmployeeService {
                 employee -> {
                     throw new CommonBackendException("Employee already exist", HttpStatus.CONFLICT);
                 });
-//        if (laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
-//            throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
-//        }
+        if (laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
+            throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
+        }
 
         Employee employee = objectMapper.convertValue(employeeInfoReq, Employee.class);
         employee.setStatus(EmployeeStatus.CREATED);
 
         Employee employeeSaved = employeeRepository.save(employee);
-        return objectMapper.convertValue(employeeSaved, EmployeeInfoResp.class);
+        Laboratory laboratoryFromDB = laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId());
+
+        laboratoryFromDB.getEmployeeList().add(employeeSaved);
+
+        laboratoryService.updateLabListEmployee(laboratoryFromDB);
+
+        EmployeeInfoResp employeeInfoResp = objectMapper.convertValue(employeeSaved, EmployeeInfoResp.class);
+        employeeInfoResp.setLaboratory(objectMapper.convertValue(laboratoryFromDB, LaboratoryInfoResp.class));
+        return employeeInfoResp;
     }
 
 
     @Override
     public EmployeeInfoResp updateEmployee(Long id, EmployeeInfoReq employeeInfoReq) {
-//        if (laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
-//            throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
-//        }
 
         Employee employeeFromDB = getEmployeeFromDB(id);
         Employee employeeForUpdate = objectMapper.convertValue(employeeInfoReq, Employee.class);
@@ -73,11 +86,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeFromDB.setLastName( employeeForUpdate.getLastName() == null ? employeeFromDB.getLastName() : employeeForUpdate.getLastName());
         employeeFromDB.setMiddleName( employeeForUpdate.getMiddleName() == null ? employeeFromDB.getMiddleName() : employeeForUpdate.getMiddleName());
         employeeFromDB.setPost( employeeForUpdate.getPost() == null ? employeeFromDB.getPost() : employeeForUpdate.getPost());
-        employeeFromDB.setLaboratory(employeeForUpdate.getLaboratory() == null ? employeeFromDB.getLaboratory() : employeeForUpdate.getLaboratory());
 
         employeeFromDB.setStatus(EmployeeStatus.UPDATED);
-        employeeFromDB = employeeRepository.save(employeeFromDB);
-        return objectMapper.convertValue(employeeFromDB, EmployeeInfoResp.class);
+        Employee employeeSaved = employeeRepository.save(employeeFromDB);
+
+        EmployeeInfoResp employeeInfoResp = objectMapper.convertValue(employeeSaved, EmployeeInfoResp.class);
+        employeeInfoResp.setLaboratory(objectMapper.convertValue(employeeSaved.getLaboratory(), LaboratoryInfoResp.class));
+
+        return employeeInfoResp;
     }
 
 
@@ -96,9 +112,29 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> getEmployeesByLabId(Long id) {
-        List <Employee> listEmpl =  employeeRepository.findEmployeesByLaboratory_Id(id);
-        return listEmpl;
+    public EmployeeInfoResp changeLab(Long id, LaboratoryInfoResp lab) {
+        if (laboratoryService.getLaboratoryFromDB(lab.getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
+            throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
+        }
+
+        Laboratory laboratoryForUpdate = objectMapper.convertValue(lab, Laboratory.class);
+        Employee employeeFromDB = getEmployeeFromDB(id);
+
+        Laboratory oldLaboratory = employeeFromDB.getLaboratory();
+        oldLaboratory.getEmployeeList().remove(employeeFromDB);
+        laboratoryService.updateLabListEmployee(oldLaboratory);
+
+        employeeFromDB.setLaboratory(laboratoryForUpdate);
+        employeeFromDB.setStatus(EmployeeStatus.UPDATED);
+        Employee employeeSaved = employeeRepository.save(employeeFromDB);
+
+        Laboratory newLab = laboratoryService.getLaboratoryFromDB(lab.getId());
+        newLab.getEmployeeList().add(employeeSaved);
+        laboratoryService.updateLabListEmployee(newLab);
+
+        EmployeeInfoResp employeeInfoResp = objectMapper.convertValue(employeeSaved, EmployeeInfoResp.class);
+        employeeInfoResp.setLaboratory(objectMapper.convertValue(employeeSaved.getLaboratory(), LaboratoryInfoResp.class));
+        return employeeInfoResp;
     }
 
 

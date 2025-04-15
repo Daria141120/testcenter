@@ -22,4 +22,6 @@ public interface LaboratoryService {
     List<LaboratoryInfoResp > getAllLaboratory();
 
     List<EmployeeInfoResp> getLaboratoryEmployees(Long id);
+
+    void updateLabListEmployee(Laboratory laboratory);
 }
