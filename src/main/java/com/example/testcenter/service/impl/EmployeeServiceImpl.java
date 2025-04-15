@@ -7,9 +7,7 @@ import com.example.testcenter.model.db.repository.EmployeeRepository;
 import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.enums.EmployeeStatus;
-import com.example.testcenter.model.enums.LaboratoryStatus;
 import com.example.testcenter.service.EmployeeService;
-import com.example.testcenter.service.LaboratoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +25,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final ObjectMapper objectMapper;
-    private final LaboratoryService laboratoryService;
+  //  private final LaboratoryService laboratoryService;
 
     private Employee getEmployeeFromDB (Long id){
         Optional <Employee> employeeFromDB = employeeRepository.findById(id);
@@ -49,9 +47,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 employee -> {
                     throw new CommonBackendException("Employee already exist", HttpStatus.CONFLICT);
                 });
-        if (laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
-            throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
-        }
+//        if (laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
+//            throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
+//        }
 
         Employee employee = objectMapper.convertValue(employeeInfoReq, Employee.class);
         employee.setStatus(EmployeeStatus.CREATED);
@@ -63,9 +61,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeInfoResp updateEmployee(Long id, EmployeeInfoReq employeeInfoReq) {
-        if (laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
-            throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
-        }
+//        if (laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
+//            throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
+//        }
 
         Employee employeeFromDB = getEmployeeFromDB(id);
         Employee employeeForUpdate = objectMapper.convertValue(employeeInfoReq, Employee.class);
@@ -96,5 +94,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findAll().stream().map(employee -> objectMapper.convertValue(employee, EmployeeInfoResp.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Employee> getEmployeesByLabId(Long id) {
+        List <Employee> listEmpl =  employeeRepository.findEmployeesByLaboratory_Id(id);
+        return listEmpl;
+    }
+
 
 }

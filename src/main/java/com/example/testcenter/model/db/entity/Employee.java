@@ -32,12 +32,12 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Post post;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "laboratory_id")
-    private Laboratory laboratory;
-
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private EmployeeStatus status;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "laboratory_id")
+    private Laboratory laboratory;
 
 }

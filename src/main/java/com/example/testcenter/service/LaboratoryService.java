@@ -2,6 +2,7 @@ package com.example.testcenter.service;
 
 import com.example.testcenter.model.db.entity.Laboratory;
 import com.example.testcenter.model.dto.request.LaboratoryInfoReq;
+import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
 
 import java.util.List;
@@ -20,5 +21,5 @@ public interface LaboratoryService {
 
     List<LaboratoryInfoResp > getAllLaboratory();
 
-
+    List<EmployeeInfoResp> getLaboratoryEmployees(Long id);
 }

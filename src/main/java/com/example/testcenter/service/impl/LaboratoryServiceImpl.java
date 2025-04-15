@@ -1,11 +1,14 @@
 package com.example.testcenter.service.impl;
 
 import com.example.testcenter.exception.CommonBackendException;
+import com.example.testcenter.model.db.entity.Employee;
 import com.example.testcenter.model.db.entity.Laboratory;
 import com.example.testcenter.model.db.repository.LaboratoryRepository;
 import com.example.testcenter.model.dto.request.LaboratoryInfoReq;
+import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
 import com.example.testcenter.model.enums.LaboratoryStatus;
+import com.example.testcenter.service.EmployeeService;
 import com.example.testcenter.service.LaboratoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
 
     private final ObjectMapper objectMapper;
     private final LaboratoryRepository laboratoryRepository;
+    private final EmployeeService employeeService;
 
     @Override
     public Laboratory getLaboratoryFromDB(Long id){
@@ -82,7 +86,17 @@ public class LaboratoryServiceImpl implements LaboratoryService {
 
     @Override
     public List<LaboratoryInfoResp> getAllLaboratory() {
-        return laboratoryRepository.findAll().stream().map(lab -> objectMapper.convertValue(lab, LaboratoryInfoResp.class)).collect(Collectors.toList());
+        return laboratoryRepository.findAll().stream()
+                .map(lab -> objectMapper.convertValue(lab, LaboratoryInfoResp.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EmployeeInfoResp> getLaboratoryEmployees(Long id) {
+        List <Employee> employeeList = employeeService.getEmployeesByLabId(id);
+
+        return employeeList.stream().map(employee -> objectMapper.convertValue(employee, EmployeeInfoResp.class))
+                .collect(Collectors.toList());
     }
 
 

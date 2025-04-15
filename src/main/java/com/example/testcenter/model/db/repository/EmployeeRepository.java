@@ -2,11 +2,20 @@ package com.example.testcenter.model.db.repository;
 
 import com.example.testcenter.model.db.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository <Employee, Long> {
 
 
     Optional<Employee> findFirstByEmailAndLastName(String email, String lastName);
+
+    List<Employee> findEmployeesByLaboratory_Id(Long id);
+    /*
+       @Query(nativeQuery = true, value = "select * from cars where user_id = :userId")
+    List<Car> getCarsByUserId(@Param("userId") Long id);
+     */
 }

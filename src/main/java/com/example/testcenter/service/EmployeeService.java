@@ -1,6 +1,7 @@
 package com.example.testcenter.service;
 
 
+import com.example.testcenter.model.db.entity.Employee;
 import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 
@@ -18,4 +19,5 @@ public interface EmployeeService {
 
     List<EmployeeInfoResp> getAllEmployee();
 
+    List<Employee> getEmployeesByLabId(Long id);
 }
