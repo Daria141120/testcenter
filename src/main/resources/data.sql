@@ -20,3 +20,6 @@
 --INSERT INTO employees (email, first_name, last_name, middle_name, post, laboratory_id, status) VALUES
 --('exam-center-e1@ya.ru', 'Ирина', 'Олеговна', 'Катина', 'LAB_TECH', 1, 'CREATED'),
 --('exam-center-e2@ya.ru', 'Светлана', 'Игоревна', 'Мишина', 'LAB_ASSISTANT', 2, 'CREATED');
+
+--INSERT INTO orders (client_id, status) VALUES
+--(1, 'CREATED');

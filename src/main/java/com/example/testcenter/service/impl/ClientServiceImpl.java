@@ -26,7 +26,8 @@ public class ClientServiceImpl implements ClientService {
     private final ObjectMapper objectMapper;
     private final ClientRepository clientRepository;
 
-    private Client getClientFromDB (Long id){
+    @Override
+    public Client getClientFromDB(Long id){
         Optional <Client> client = clientRepository.findById(id);
         final String errMsg = String.format("client with id : %s not found", id);
         return client.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));

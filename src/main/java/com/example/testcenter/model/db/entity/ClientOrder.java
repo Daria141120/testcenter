@@ -33,10 +33,9 @@ public class ClientOrder {
     private OrderStatus status;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
     private Client client;
-
 
 
 
