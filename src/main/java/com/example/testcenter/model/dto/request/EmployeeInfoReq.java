@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmployeeInfoReq {
 
-    @NotEmpty(message = "Email должен быть заполнен")
+    @NotEmpty(message = "Email должен быть заполнен") // лишнее?
     @Email(message = "должен иметь формат адреса электронной почты")
     @Schema(description = "email")
     private String email;

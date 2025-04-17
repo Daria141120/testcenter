@@ -23,3 +23,9 @@
 
 --INSERT INTO orders (client_id, status) VALUES
 --(1, 'CREATED');
+--
+--INSERT INTO equip_exams2 (equipment_id, exam_id, availability) VALUES
+--(1, 1, 'AVAILABLE'),
+--(1, 2, 'UNAVAILABLE_TEMPORARILY'),
+--(4, 3, 'UNAVAILABLE_TEMPORARILY'),
+--(5, 19, 'UNAVAILABLE_TEMPORARILY');

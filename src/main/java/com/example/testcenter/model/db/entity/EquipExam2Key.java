@@ -1,6 +1,9 @@
 package com.example.testcenter.model.db.entity;
 
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
@@ -8,8 +11,12 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
 @Embeddable
 public class EquipExam2Key implements Serializable {
+
+    private static final long serialVersionUID = 8488050786082163956L;
 
     @Column(name = "equipment_id", nullable = false)
     private Long equipmentId;
