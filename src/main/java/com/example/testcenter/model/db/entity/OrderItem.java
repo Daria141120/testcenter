@@ -19,9 +19,17 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private ClientOrder order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "equip_exam_id")
-    private EquipExam equipExam;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "equip_exam_id")
+//    private EquipExam equipExam;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumns({
+            @JoinColumn(name = "equipmentId", nullable = false, insertable = false, updatable = false),
+            @JoinColumn(name = "examId", nullable = false, insertable = false, updatable = false)
+    })
+    private EquipExam2 equipExam2;
+
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -31,7 +39,6 @@ public class OrderItem {
 
     @Column(name = "additional_info")
     private String info;
-
 
 
 }
