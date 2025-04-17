@@ -29,10 +29,10 @@ public class EquipExam2Controller {
         return equipExam2Service.getEquipExam(id, id2);
     }
 
-    @GetMapping("/OneId/{id}")
+    @GetMapping("/OneId/{id}&{id2}")
     @Operation(summary = "Получить связь испытание-оборудование")
-    public EquipExam2InfoResp getEquipExamOneId(@PathVariable("id") EquipExam2Key id) {
-        return equipExam2Service.getEquipExamOneId(id);
+    public EquipExam2InfoResp getEquipExamOneId(@PathVariable("id") Long id, @PathVariable("id2") Long id2) {
+        return equipExam2Service.getEquipExamOneId(id, id2);
     }
 
     @GetMapping("/all")

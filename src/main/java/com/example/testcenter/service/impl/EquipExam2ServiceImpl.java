@@ -31,7 +31,7 @@ public class EquipExam2ServiceImpl implements EquipExam2Service {
         return equipExam2FromDB.orElseThrow(()-> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
 
-
+    // del:
     @Override
     public EquipExam2InfoResp getEquipExam(Long id, Long id2) {
 
@@ -43,17 +43,11 @@ public class EquipExam2ServiceImpl implements EquipExam2Service {
     }
 
 
-
-
     @Override
-    public List<EquipExam2InfoResp> getEquipExamAll() {
-        return equipExam2Repository.findAll().stream().map(equipExam2 -> objectMapper.convertValue(equipExam2, EquipExam2InfoResp.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public EquipExam2InfoResp getEquipExamOneId(EquipExam2Key id) {
-        EquipExam2 equipExamFromDB = getEquipExamFromDB(id);
+    public EquipExam2InfoResp getEquipExamOneId(Long id_exam, Long id_eq) {
+        //EquipExam2 equipExamFromDB = getEquipExamFromDB(id);
+        EquipExam2Key key = new EquipExam2Key(id_exam, id_eq);
+        EquipExam2 equipExamFromDB = getEquipExamFromDB(key);
         return objectMapper.convertValue(equipExamFromDB, EquipExam2InfoResp.class);
     }
 
@@ -61,6 +55,12 @@ public class EquipExam2ServiceImpl implements EquipExam2Service {
     @Override
     public EquipExam2InfoResp addEquipExam(EquipExam2InfoReq req) {
         return null;
+    }
+
+    @Override
+    public List<EquipExam2InfoResp> getEquipExamAll() {
+        return equipExam2Repository.findAll().stream().map(equipExam2 -> objectMapper.convertValue(equipExam2, EquipExam2InfoResp.class))
+                .collect(Collectors.toList());
     }
 
 

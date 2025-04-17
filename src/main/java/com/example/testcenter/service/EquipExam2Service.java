@@ -4,7 +4,6 @@ import com.example.testcenter.model.db.entity.EquipExam2Key;
 import com.example.testcenter.model.dto.request.EquipExam2InfoReq;
 import com.example.testcenter.model.dto.response.EquipExam2InfoResp;
 
-import javax.validation.Valid;
 import java.util.List;
 
 public interface EquipExam2Service {
@@ -15,5 +14,5 @@ public interface EquipExam2Service {
     List<EquipExam2InfoResp> getEquipExamAll();
 
 
-    EquipExam2InfoResp getEquipExamOneId(EquipExam2Key id);
+    EquipExam2InfoResp getEquipExamOneId(Long id_exam, Long id_eq);
 }

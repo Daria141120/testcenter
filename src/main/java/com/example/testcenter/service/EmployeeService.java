@@ -1,7 +1,5 @@
 package com.example.testcenter.service;
 
-
-import com.example.testcenter.model.db.entity.Employee;
 import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
@@ -22,5 +20,4 @@ public interface EmployeeService {
 
     EmployeeInfoResp changeLab(Long id, LaboratoryInfoResp lab);
 
-    // List<Employee> getEmployeesByLabId(Long id);
 }
