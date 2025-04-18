@@ -31,7 +31,5 @@ public class EquipExam2InfoReq {
     @NotNull(message = "Испытание должно быть заполнено")
     private ExamInfoResp exam;
 
-    @NotEmpty
-    @Schema(description = "Доступность")
-    private Availability availability;
+
 }

@@ -40,8 +40,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     @Override
     public ClientOrderInfoResp getClientOrder(Long id) {
         ClientOrder clientOrderFromDB = getClientOrderFromDB(id);
-        ClientOrderInfoResp clientOrderInfoResp = objectMapper.convertValue(clientOrderFromDB, ClientOrderInfoResp.class);
-        return clientOrderInfoResp;
+        return objectMapper.convertValue(clientOrderFromDB, ClientOrderInfoResp.class);
     }
 
     @Override

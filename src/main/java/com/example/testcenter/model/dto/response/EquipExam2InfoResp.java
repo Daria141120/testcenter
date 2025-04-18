@@ -3,6 +3,7 @@ package com.example.testcenter.model.dto.response;
 
 import com.example.testcenter.model.db.entity.EquipExam2Key;
 import com.example.testcenter.model.dto.request.EquipExam2InfoReq;
+import com.example.testcenter.model.enums.Availability;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -22,5 +23,9 @@ public class EquipExam2InfoResp extends EquipExam2InfoReq {
 
     @Schema(description = "id")
     private EquipExam2Key id;
+
+
+    @Schema(description = "Доступность")
+    private Availability availability;
 
 }

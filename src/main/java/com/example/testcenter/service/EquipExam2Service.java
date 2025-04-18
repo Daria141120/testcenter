@@ -7,12 +7,10 @@ import com.example.testcenter.model.dto.response.EquipExam2InfoResp;
 import java.util.List;
 
 public interface EquipExam2Service {
-    EquipExam2InfoResp getEquipExam(Long id, Long id2);
 
     EquipExam2InfoResp addEquipExam(EquipExam2InfoReq req);
 
     List<EquipExam2InfoResp> getEquipExamAll();
 
-
-    EquipExam2InfoResp getEquipExamOneId(Long id_exam, Long id_eq);
+    EquipExam2InfoResp getEquipExam(Long id_exam, Long id_eq);
 }

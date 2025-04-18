@@ -26,9 +26,10 @@ public class EquipmentServiceImpl implements EquipmentService {
     private final EquipmentRepository equipmentRepository;
     private final ObjectMapper objectMapper;
 
-    private Equipment getEquipmentFromDB (Long id){
+    @Override
+    public Equipment getEquipmentFromDB(Long id){
         Optional<Equipment> equipmentFromDB = equipmentRepository.findById(id);
-        final String errMsg = String.format("equipment with id : %s not found", id);
+        final String errMsg = String.format("equipmentId with id : %s not found", id);
         return equipmentFromDB.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
 

@@ -9,7 +9,7 @@ import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.dao.DataIntegrityViolationException;   //
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -65,6 +65,15 @@ public class GlobalExceptionHandler {
         log.error(message);
         return ResponseEntity.badRequest().body(new ErrorMessage(message));
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorMessage> handleNotUniqueValue(DataIntegrityViolationException ex) {
+      //  String message = ex.getMessage();
+      //  log.error("повторяющееся значение ключа нарушает ограничение уникальности : {}", message);
+        return ResponseEntity.badRequest().body(new ErrorMessage(("ОШИБКА: повторяющееся значение ключа нарушает ограничение уникальности таблицы")));
+    }
+
+
 
 
 }

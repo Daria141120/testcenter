@@ -23,16 +23,10 @@ public class EquipExam2Controller {
 
      private final EquipExam2Service equipExam2Service;
 
-    @GetMapping("/{id}/{id2}")
+    @GetMapping("/{id}&{id2}")
     @Operation(summary = "Получить связь испытание-оборудование")
     public EquipExam2InfoResp getEquipExam(@PathVariable("id") Long id, @PathVariable("id2") Long id2) {
         return equipExam2Service.getEquipExam(id, id2);
-    }
-
-    @GetMapping("/OneId/{id}&{id2}")
-    @Operation(summary = "Получить связь испытание-оборудование")
-    public EquipExam2InfoResp getEquipExamOneId(@PathVariable("id") Long id, @PathVariable("id2") Long id2) {
-        return equipExam2Service.getEquipExamOneId(id, id2);
     }
 
     @GetMapping("/all")
@@ -42,10 +36,28 @@ public class EquipExam2Controller {
     }
 
 
-
     @PostMapping
     @Operation(summary = "Добавить связь испытание-оборудование")
     public EquipExam2InfoResp addEquipExam(@RequestBody @Valid EquipExam2InfoReq req) {
         return equipExam2Service.addEquipExam(req);
     }
+
+
+
+
+
+
+//    @PostMapping
+//    @Operation(summary = "Добавить связи для оборудования со списком испытаний")
+//    public EquipExam2InfoResp addEquipExam(@RequestBody @Valid EquipExam2InfoReq req) {
+//        return equipExam2Service.addEquipExam(req);
+//    }
+
+
+
+
+
+
+
+
 }

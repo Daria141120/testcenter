@@ -40,12 +40,12 @@ public class EquipExam2Key implements Serializable {
     }
 
 
-//    @Override
-//    public String toString() {
-//        return "EquipExam2Key{" +
-//                "equipmentId=" + equipmentId +
-//                ", examId=" + examId +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "EquipExam2Key{" +
+                "equipmentId=" + equipmentId +
+                ", examId=" + examId +
+                '}';
+    }
 
 }

@@ -14,15 +14,15 @@ import javax.persistence.*;
 public class EquipExam2 {
 
     @EmbeddedId
-    private EquipExam2Key id;
+    private EquipExam2Key id = new EquipExam2Key();  // без new не конвертирует при пост запросе: Could not set field value [4] value by reflection  - для ключа
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("equipmentId")
     @JoinColumn(name = "equipment_id", nullable = false)
     private Equipment equipment;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("examId")
     @JoinColumn(name = "exam_id", nullable = false)
     private Exam exam;
