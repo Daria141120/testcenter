@@ -48,4 +48,6 @@ public class EquipExam2Key implements Serializable {
                 '}';
     }
 
+
+
 }

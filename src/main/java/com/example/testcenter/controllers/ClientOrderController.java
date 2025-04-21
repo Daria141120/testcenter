@@ -53,7 +53,7 @@ public class ClientOrderController {
     }
 
 
-    @GetMapping("/ordersStatusAll")                   // используется для вбора статуса при обновлении информации о состоянии заявки
+    @GetMapping("/allStatus")                   // используется для вбора статуса при обновлении информации о состоянии заявки
     @Operation(summary = "Получить все возможные статусы заявок")
     public List <OrderStatus> getAllOrderStatus() {
         return clientOrderService.getAllOrderStatus();

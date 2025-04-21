@@ -3,8 +3,12 @@ package com.example.testcenter.model.db.entity;
 import com.example.testcenter.model.enums.EquipStatus;
 import com.example.testcenter.model.enums.TypeEquipment;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,6 +29,11 @@ public class Equipment {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private EquipStatus status;
+
+    @OneToMany(mappedBy = "equipment")
+    @JsonManagedReference
+    List<EquipExam2> equipExam2List;
+
 
 
 }

@@ -2,6 +2,7 @@ package com.example.testcenter.model.db.entity;
 
 
 import com.example.testcenter.model.enums.Availability;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ public class EquipExam2 {
     @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("equipmentId")
     @JoinColumn(name = "equipment_id", nullable = false)
+    @JsonBackReference
     private Equipment equipment;
 
     @ManyToOne(fetch = FetchType.EAGER)

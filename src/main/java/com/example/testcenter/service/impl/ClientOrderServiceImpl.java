@@ -78,8 +78,9 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     public ClientOrderInfoResp updateClientOrderStatus(Long id, String status) {
 
         List <String> list = getAllOrderStatus().stream().map(Enum::name).collect(Collectors.toList());
-        if (!list.contains(status))
+        if (!list.contains(status)) {
             throw new CommonBackendException("Error in the status, there is no such status.", HttpStatus.BAD_REQUEST);
+        }
 
         OrderStatus orderStatus = OrderStatus.valueOf(status);
 

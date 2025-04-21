@@ -2,11 +2,16 @@ package com.example.testcenter.service.impl;
 
 
 import com.example.testcenter.exception.CommonBackendException;
+import com.example.testcenter.model.db.entity.EquipExam2;
 import com.example.testcenter.model.db.entity.Equipment;
 import com.example.testcenter.model.db.repository.EquipmentRepository;
+import com.example.testcenter.model.dto.request.EquipExam2InfoReq;
 import com.example.testcenter.model.dto.request.EquipmentInfoReq;
+import com.example.testcenter.model.dto.response.EquipExam2InfoResp;
 import com.example.testcenter.model.dto.response.EquipmentInfoResp;
+import com.example.testcenter.model.dto.response.ExamInfoResp;
 import com.example.testcenter.model.enums.EquipStatus;
+import com.example.testcenter.service.EquipExam2Service;
 import com.example.testcenter.service.EquipmentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +31,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     private final EquipmentRepository equipmentRepository;
     private final ObjectMapper objectMapper;
+    private final EquipExam2Service equipExam2Service;
 
     @Override
     public Equipment getEquipmentFromDB(Long id){
@@ -81,4 +88,38 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentRepository.findAll().stream().map(equip -> objectMapper.convertValue(equip, EquipmentInfoResp.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<ExamInfoResp> getEquipmentExams(Long id) {
+        Equipment equipment = getEquipmentFromDB(id);
+
+        List <EquipExam2> equipExamList = equipment.getEquipExam2List();
+        List <ExamInfoResp> examInfoRespList = equipExamList.stream()
+                .map(equipExam2 -> objectMapper.convertValue(equipExam2.getExam(), ExamInfoResp.class))
+                .collect(Collectors.toList());
+
+        return examInfoRespList;
+    }
+
+    @Override
+    public List<EquipExam2InfoResp> addEquipmentExams(Long id, List<ExamInfoResp> examsRespList) {
+        Equipment equipFromDB = getEquipmentFromDB(id);
+        EquipmentInfoResp equipResp = objectMapper.convertValue(equipFromDB, EquipmentInfoResp.class);
+
+        List<EquipExam2InfoResp> respList = new ArrayList<>();
+
+        EquipExam2InfoReq equipExamReq = new EquipExam2InfoReq();
+        equipExamReq.setEquipment(equipResp);
+
+        examsRespList.forEach(
+                examInfoResp -> {
+                  equipExamReq.setExam(examInfoResp);
+                  EquipExam2InfoResp resp =  equipExam2Service.addEquipExam(equipExamReq);
+                  respList.add(resp);
+                }
+        );
+        return respList;
+    }
+
+
 }

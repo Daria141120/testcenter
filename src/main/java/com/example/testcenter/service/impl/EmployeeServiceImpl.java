@@ -107,8 +107,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeInfoResp> getAllEmployee() {
-        return employeeRepository.findAll().stream().map(employee -> objectMapper.convertValue(employee, EmployeeInfoResp.class))
-                .collect(Collectors.toList());
+        return employeeRepository.findAll().stream().map(employee -> {
+                LaboratoryInfoResp labResp = objectMapper.convertValue(employee.getLaboratory(), LaboratoryInfoResp.class);
+                EmployeeInfoResp emplResp = objectMapper.convertValue(employee, EmployeeInfoResp.class);
+                emplResp.setLaboratory(labResp);
+                return emplResp;
+            })
+            .collect(Collectors.toList());
     }
 
     @Override
