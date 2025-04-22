@@ -4,7 +4,9 @@ import com.example.testcenter.exception.CommonBackendException;
 import com.example.testcenter.mapper.OrderItemMapper;
 import com.example.testcenter.model.db.entity.OrderItem;
 import com.example.testcenter.model.db.repository.OrderItemRepository;
+import com.example.testcenter.model.dto.request.OrderItemInfoReq;
 import com.example.testcenter.model.dto.response.OrderItemInfoResp;
+import com.example.testcenter.model.enums.OrderStatus;
 import com.example.testcenter.service.EquipExam2Service;
 import com.example.testcenter.service.OrderItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -37,14 +40,58 @@ public class OrderItemServiceImpl implements OrderItemService {
     @SneakyThrows
     public OrderItemInfoResp getOrderItem(Long id) {
         OrderItem orderItemFromDB = getOrderItemFromDB(id);
+        return orderItemMapper.toOrderItemInfoResp(orderItemFromDB);
+    }
 
-        OrderItemInfoResp resp = orderItemMapper.toOrderItemInfoResp(orderItemFromDB);
-        //OrderItemInfoResp resp = objectMapper.convertValue(orderItemFromDB, OrderItemInfoResp.class); // not work
-        return resp;
+    @Override
+    public OrderItemInfoResp addOrderItem(OrderItemInfoReq req) {
+        if (req.getClientOrder().getStatus() == OrderStatus.COMPLETED){
+            throw new CommonBackendException("Order has already been COMPLETED", HttpStatus.CONFLICT);
+        }
+
+        OrderItem orderItem = objectMapper.convertValue(req, OrderItem.class);
+        OrderItem orderItemSaved = orderItemRepository.save(orderItem);
+        return orderItemMapper.toOrderItemInfoResp(orderItemSaved);
+    }
+
+    @Override
+    public OrderItemInfoResp updateOrderItem(Long id, OrderItemInfoReq req) {
+        if (req.getClientOrder().getStatus() == OrderStatus.COMPLETED){
+            throw new CommonBackendException("Order has already been COMPLETED", HttpStatus.CONFLICT);
+        }
+        OrderItem orderItemFromDB = getOrderItemFromDB(id);
+        OrderItem orderItemForUpdate = objectMapper.convertValue(req, OrderItem.class);
+
+        orderItemFromDB.setQuantity(orderItemForUpdate.getQuantity() == null ? orderItemFromDB.getQuantity() : orderItemForUpdate.getQuantity());
+        orderItemFromDB.setInfo(orderItemForUpdate.getInfo() == null ? orderItemFromDB.getInfo() : orderItemForUpdate.getInfo());
+        orderItemFromDB.setExamResult(orderItemForUpdate.getExamResult() == null ? orderItemFromDB.getExamResult() : orderItemForUpdate.getExamResult());
+
+        OrderItem orderItemSaved = orderItemRepository.save(orderItemFromDB);
+        return orderItemMapper.toOrderItemInfoResp(orderItemSaved);
+    }
+
+    @Override
+    public List<OrderItemInfoResp> getAllOrderItem(Long idOrder) {
+        List<OrderItem> orderItemList;
+
+        if (idOrder != null){
+            orderItemList = orderItemRepository.findAllByClientOrder_Id(idOrder);
+        } else {
+            orderItemList = orderItemRepository.findAll();
+        }
+
+        return orderItemMapper.toOrderItemInfoRespList(orderItemList);
     }
 
 
 
+
+
+
+    /*
+
+
+     */
 
 
 }

@@ -3,9 +3,6 @@ package com.example.testcenter.model.dto.request;
 
 import com.example.testcenter.model.dto.response.ClientOrderInfoResp;
 import com.example.testcenter.model.dto.response.EquipExam2InfoResp;
-import com.example.testcenter.model.dto.response.EquipmentInfoResp;
-import com.example.testcenter.model.dto.response.ExamInfoResp;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +26,6 @@ public class OrderItemInfoReq {
     @NotNull(message = "Заявка должна быть заполнена")
     @Schema(description = "Заявка")
     private ClientOrderInfoResp clientOrder;
-
 
     @Schema(description = "Связь оборудование-испытание")
     private EquipExam2InfoResp equipExam;

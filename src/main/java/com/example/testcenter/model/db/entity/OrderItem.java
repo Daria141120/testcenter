@@ -16,7 +16,7 @@ public class OrderItem {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false)
     private ClientOrder clientOrder;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
@@ -26,8 +26,8 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
-            @JoinColumn(name = "equipmentId", nullable = false, insertable = false, updatable = false),
-            @JoinColumn(name = "examId", nullable = false, insertable = false, updatable = false)
+            @JoinColumn(name = "equipmentId", nullable = false),
+            @JoinColumn(name = "examId", nullable = false)
     })
     private EquipExam2 equipExam;
 

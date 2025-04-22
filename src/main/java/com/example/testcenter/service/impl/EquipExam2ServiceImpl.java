@@ -1,20 +1,14 @@
 package com.example.testcenter.service.impl;
 
 import com.example.testcenter.exception.CommonBackendException;
+import com.example.testcenter.mapper.EquipExamMapper;
 import com.example.testcenter.model.db.entity.EquipExam2;
 import com.example.testcenter.model.db.entity.EquipExam2Key;
-import com.example.testcenter.model.db.entity.Equipment;
-import com.example.testcenter.model.db.entity.Exam;
 import com.example.testcenter.model.db.repository.EquipExam2Repository;
 import com.example.testcenter.model.dto.request.EquipExam2InfoReq;
 import com.example.testcenter.model.dto.response.EquipExam2InfoResp;
-import com.example.testcenter.model.dto.response.EquipmentInfoResp;
 import com.example.testcenter.model.enums.Availability;
-import com.example.testcenter.model.enums.EquipStatus;
-import com.example.testcenter.model.enums.ExamStatus;
 import com.example.testcenter.service.EquipExam2Service;
-import com.example.testcenter.service.EquipmentService;
-import com.example.testcenter.service.ExamService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +27,7 @@ public class EquipExam2ServiceImpl implements EquipExam2Service {
 
     private final EquipExam2Repository equipExam2Repository;
     private final ObjectMapper objectMapper;
+    private final EquipExamMapper equipExamMapper;
 //    private final EquipmentService equipmentService;
 //    private final ExamService examService;
 
@@ -48,9 +43,7 @@ public class EquipExam2ServiceImpl implements EquipExam2Service {
     @Override
     public EquipExam2InfoResp getEquipExam(Long id_eq, Long id_exam) {
         EquipExam2 equipExamFromDB = getEquipExamFromDB(id_eq, id_exam);
-        EquipExam2InfoResp resp = objectMapper.convertValue(equipExamFromDB, EquipExam2InfoResp.class);
-        resp.setEquipment(objectMapper.convertValue(equipExamFromDB.getEquipment(), EquipmentInfoResp.class));
-        return resp;
+        return equipExamMapper.toEquipExam2InfoResp(equipExamFromDB);
     }
 
 
@@ -73,9 +66,7 @@ public class EquipExam2ServiceImpl implements EquipExam2Service {
         equipExam2.setAvailability(Availability.AVAILABLE);
         EquipExam2 equipExam2Saved = equipExam2Repository.save(equipExam2);
 
-        EquipExam2InfoResp resp = objectMapper.convertValue(equipExam2Saved, EquipExam2InfoResp.class);
-        resp.setEquipment(objectMapper.convertValue(equipExam2Saved.getEquipment(), EquipmentInfoResp.class));
-        return resp;
+        return equipExamMapper.toEquipExam2InfoResp(equipExam2Saved);
     }
 
 
@@ -93,23 +84,14 @@ public class EquipExam2ServiceImpl implements EquipExam2Service {
         equipExam2FromDB.setAvailability(availability);
         EquipExam2 equipExam2Saved = equipExam2Repository.save(equipExam2FromDB);
 
-        EquipExam2InfoResp resp = objectMapper.convertValue(equipExam2Saved, EquipExam2InfoResp.class);
-        resp.setEquipment(objectMapper.convertValue(equipExam2Saved.getEquipment(), EquipmentInfoResp.class));
-        return resp;
+        return equipExamMapper.toEquipExam2InfoResp(equipExam2Saved);
     }
 
 
     @Override
     public List<EquipExam2InfoResp> getEquipExamAll() {
-
-        return equipExam2Repository.findAll().stream().map(equipExam ->
-                {
-                    EquipmentInfoResp equipResp = objectMapper.convertValue(equipExam.getEquipment(), EquipmentInfoResp.class);
-                    EquipExam2InfoResp equipExamResp = objectMapper.convertValue(equipExam, EquipExam2InfoResp.class);
-                    equipExamResp.setEquipment(equipResp);
-                    return equipExamResp;
-                })
-               .collect(Collectors.toList());
+        List<EquipExam2> equipExam2List = equipExam2Repository.findAll();
+        return equipExamMapper.toEquipExam2InfoRespList(equipExam2List);
     }
 
 
@@ -117,8 +99,5 @@ public class EquipExam2ServiceImpl implements EquipExam2Service {
     public List<Availability> getAllEquipExamStatus() {
         return Arrays.stream(Availability.values()).collect(Collectors.toList());
     }
-
-
-
 
 }

@@ -14,8 +14,4 @@ public interface EmployeeRepository extends JpaRepository <Employee, Long> {
     Optional<Employee> findFirstByEmailAndLastName(String email, String lastName);
 
     List<Employee> findEmployeesByLaboratory_Id(Long id);
-    /*
-       @Query(nativeQuery = true, value = "select * from cars where user_id = :userId")
-    List<Car> getCarsByUserId(@Param("userId") Long id);
-     */
 }

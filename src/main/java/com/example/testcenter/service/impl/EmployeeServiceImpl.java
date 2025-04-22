@@ -2,6 +2,7 @@ package com.example.testcenter.service.impl;
 
 
 import com.example.testcenter.exception.CommonBackendException;
+import com.example.testcenter.mapper.EmployeeMapper;
 import com.example.testcenter.model.db.entity.Employee;
 import com.example.testcenter.model.db.entity.Laboratory;
 import com.example.testcenter.model.db.repository.EmployeeRepository;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,6 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final ObjectMapper objectMapper;
     private final LaboratoryService laboratoryService;
+    private final EmployeeMapper employeeMapper;
 
     private Employee getEmployeeFromDB (Long id){
         Optional <Employee> employeeFromDB = employeeRepository.findById(id);
@@ -40,11 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeInfoResp getEmployee(Long id) {
         Employee employeeFromDB = getEmployeeFromDB(id);
-        EmployeeInfoResp employeeInfoResp = objectMapper.convertValue(employeeFromDB, EmployeeInfoResp.class);
-
-        employeeInfoResp.setLaboratory(objectMapper.convertValue(employeeFromDB.getLaboratory(), LaboratoryInfoResp.class));
-
-        return employeeInfoResp;
+        return employeeMapper.toEmployeeInfoResp(employeeFromDB);
     }
 
 
@@ -61,17 +58,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee employee = objectMapper.convertValue(employeeInfoReq, Employee.class);
         employee.setStatus(EmployeeStatus.CREATED);
-
         Employee employeeSaved = employeeRepository.save(employee);
+
         Laboratory laboratoryFromDB = laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId());
-
         laboratoryFromDB.getEmployeeList().add(employeeSaved);
-
         laboratoryService.updateLabListEmployee(laboratoryFromDB);
 
-        EmployeeInfoResp employeeInfoResp = objectMapper.convertValue(employeeSaved, EmployeeInfoResp.class);
-        employeeInfoResp.setLaboratory(objectMapper.convertValue(laboratoryFromDB, LaboratoryInfoResp.class));
-        return employeeInfoResp;
+        return employeeMapper.toEmployeeInfoResp(employeeSaved);
     }
 
 
@@ -90,12 +83,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeFromDB.setStatus(EmployeeStatus.UPDATED);
         Employee employeeSaved = employeeRepository.save(employeeFromDB);
 
-        EmployeeInfoResp employeeInfoResp = objectMapper.convertValue(employeeSaved, EmployeeInfoResp.class);
-        employeeInfoResp.setLaboratory(objectMapper.convertValue(employeeSaved.getLaboratory(), LaboratoryInfoResp.class));
-
-        return employeeInfoResp;
+        return employeeMapper.toEmployeeInfoResp(employeeSaved);
     }
-
 
     @Override
     public void deleteEmployee(Long id) {
@@ -107,13 +96,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeInfoResp> getAllEmployee() {
-        return employeeRepository.findAll().stream().map(employee -> {
-                LaboratoryInfoResp labResp = objectMapper.convertValue(employee.getLaboratory(), LaboratoryInfoResp.class);
-                EmployeeInfoResp emplResp = objectMapper.convertValue(employee, EmployeeInfoResp.class);
-                emplResp.setLaboratory(labResp);
-                return emplResp;
-            })
-            .collect(Collectors.toList());
+        List<Employee> employees = employeeRepository.findAll();
+        return employeeMapper.toEmployeeInfoRespList(employees);
     }
 
     @Override
@@ -137,9 +121,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         newLab.getEmployeeList().add(employeeSaved);
         laboratoryService.updateLabListEmployee(newLab);
 
-        EmployeeInfoResp employeeInfoResp = objectMapper.convertValue(employeeSaved, EmployeeInfoResp.class);
-        employeeInfoResp.setLaboratory(objectMapper.convertValue(employeeSaved.getLaboratory(), LaboratoryInfoResp.class));
-        return employeeInfoResp;
+        return employeeMapper.toEmployeeInfoResp(employeeSaved);
     }
 
 
