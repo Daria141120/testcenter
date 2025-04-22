@@ -4,9 +4,10 @@ import com.example.testcenter.model.enums.EquipStatus;
 import com.example.testcenter.model.enums.TypeEquipment;
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
+
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "equipments")
+
 public class Equipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +32,9 @@ public class Equipment {
     @Enumerated(EnumType.STRING)
     private EquipStatus status;
 
-    @OneToMany(mappedBy = "equipment")
+    @OneToMany(mappedBy = "equipment", fetch = FetchType.EAGER)
     @JsonManagedReference
-    List<EquipExam2> equipExam2List;
+    private List<EquipExam2> equipExam2List;
 
 
 

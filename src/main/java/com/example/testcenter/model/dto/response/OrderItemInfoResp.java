@@ -1,7 +1,10 @@
 package com.example.testcenter.model.dto.response;
 
-import com.example.testcenter.model.dto.request.EquipmentInfoReq;
+
+import com.example.testcenter.model.dto.request.OrderItemInfoReq;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,20 +12,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
-
-
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 
-public class EquipmentInfoResp extends EquipmentInfoReq {
+public class OrderItemInfoResp extends OrderItemInfoReq {
 
     @Schema(description = "id")
     private Long id;
-
 
 }

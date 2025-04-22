@@ -44,8 +44,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public EquipmentInfoResp getEquipment(Long id) {
         Equipment equipmentFromDB = getEquipmentFromDB(id);
-        var x = objectMapper.convertValue(equipmentFromDB, EquipmentInfoResp.class);
-        return x;
+        return objectMapper.convertValue(equipmentFromDB, EquipmentInfoResp.class);
     }
 
 

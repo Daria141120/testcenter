@@ -27,6 +27,7 @@ public class EquipExam2InfoReq {
     @NotNull(message = "Оборудование должно быть заполнено")
     private EquipmentInfoResp equipment;
 
+
     @Schema(description = "Испытание")
     @NotNull(message = "Испытание должно быть заполнено")
     private ExamInfoResp exam;

@@ -3,6 +3,7 @@ package com.example.testcenter.model.db.entity;
 
 import com.example.testcenter.model.enums.Availability;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Getter;
 import lombok.Setter;
 

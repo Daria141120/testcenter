@@ -31,6 +31,6 @@ public class Laboratory {
 
     @OneToMany(mappedBy = "laboratory")
     @JsonManagedReference
-    List<Employee> employeeList;
+    private List<Employee> employeeList;
 
 }
