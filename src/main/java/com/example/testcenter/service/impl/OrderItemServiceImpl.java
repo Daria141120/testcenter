@@ -2,12 +2,13 @@ package com.example.testcenter.service.impl;
 
 import com.example.testcenter.exception.CommonBackendException;
 import com.example.testcenter.mapper.OrderItemMapper;
+import com.example.testcenter.model.db.entity.ClientOrder;
 import com.example.testcenter.model.db.entity.OrderItem;
 import com.example.testcenter.model.db.repository.OrderItemRepository;
 import com.example.testcenter.model.dto.request.OrderItemInfoReq;
 import com.example.testcenter.model.dto.response.OrderItemInfoResp;
 import com.example.testcenter.model.enums.OrderStatus;
-import com.example.testcenter.service.EquipExam2Service;
+import com.example.testcenter.service.ClientOrderService;
 import com.example.testcenter.service.OrderItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +28,8 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     private final OrderItemRepository orderItemRepository;
     private final ObjectMapper objectMapper;
-    private final EquipExam2Service equipExam2Service;
     private final OrderItemMapper orderItemMapper;
+    private final ClientOrderService clientOrderService;
 
     public OrderItem getOrderItemFromDB(Long id) {
           Optional<OrderItem> orderItemFromDB = orderItemRepository.findById(id);
@@ -51,6 +52,13 @@ public class OrderItemServiceImpl implements OrderItemService {
 
         OrderItem orderItem = objectMapper.convertValue(req, OrderItem.class);
         OrderItem orderItemSaved = orderItemRepository.save(orderItem);
+
+        // синхронизация (правда работает и без нее)
+        ClientOrder clientOrder = clientOrderService.getClientOrderFromDB(orderItemSaved.getClientOrder().getId());
+        List<OrderItem> orderItemList = clientOrder.getOrderItemList();
+        orderItemList.add(orderItemSaved);
+        clientOrderService.updateOrderItemList(clientOrder);
+
         return orderItemMapper.toOrderItemInfoResp(orderItemSaved);
     }
 
@@ -67,6 +75,13 @@ public class OrderItemServiceImpl implements OrderItemService {
         orderItemFromDB.setExamResult(orderItemForUpdate.getExamResult() == null ? orderItemFromDB.getExamResult() : orderItemForUpdate.getExamResult());
 
         OrderItem orderItemSaved = orderItemRepository.save(orderItemFromDB);
+
+        // синхронизация (правда работает и без нее)
+        ClientOrder clientOrder = clientOrderService.getClientOrderFromDB(orderItemSaved.getClientOrder().getId());
+        List<OrderItem> orderItemList = clientOrder.getOrderItemList();
+        orderItemList.add(orderItemSaved);
+        clientOrderService.updateOrderItemList(clientOrder);
+
         return orderItemMapper.toOrderItemInfoResp(orderItemSaved);
     }
 
@@ -83,15 +98,6 @@ public class OrderItemServiceImpl implements OrderItemService {
         return orderItemMapper.toOrderItemInfoRespList(orderItemList);
     }
 
-
-
-
-
-
-    /*
-
-
-     */
 
 
 }

@@ -2,6 +2,7 @@ package com.example.testcenter.model.db.entity;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference
     private ClientOrder clientOrder;
 
 //    @ManyToOne(fetch = FetchType.LAZY)

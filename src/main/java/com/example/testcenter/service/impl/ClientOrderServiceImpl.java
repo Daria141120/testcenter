@@ -2,11 +2,14 @@ package com.example.testcenter.service.impl;
 
 
 import com.example.testcenter.exception.CommonBackendException;
+import com.example.testcenter.mapper.OrderItemMapper;
 import com.example.testcenter.model.db.entity.Client;
 import com.example.testcenter.model.db.entity.ClientOrder;
+import com.example.testcenter.model.db.entity.OrderItem;
 import com.example.testcenter.model.db.repository.ClientOrderRepository;
 import com.example.testcenter.model.dto.request.ClientOrderInfoReq;
 import com.example.testcenter.model.dto.response.ClientOrderInfoResp;
+import com.example.testcenter.model.dto.response.OrderItemInfoResp;
 import com.example.testcenter.model.enums.OrderStatus;
 import com.example.testcenter.service.ClientOrderService;
 import com.example.testcenter.service.ClientService;
@@ -27,9 +30,11 @@ import java.util.stream.Collectors;
 public class ClientOrderServiceImpl implements ClientOrderService {
 
     private final ClientOrderRepository clientOrderRepository;
-    private final ObjectMapper objectMapper;
     private final ClientService clientService;
+    private final OrderItemMapper orderItemMapper;
+    private final ObjectMapper objectMapper;
 
+    @Override
     public ClientOrder getClientOrderFromDB(Long id) {
         Optional<ClientOrder> clientOrderFromDB = clientOrderRepository.findById(id);
         final String errMsg = String.format("order with id : %s not found", id);
@@ -101,4 +106,17 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     public List<OrderStatus> getAllOrderStatus() {
         return Arrays.stream(OrderStatus.values()).collect(Collectors.toList());
     }
+
+    @Override
+    public List<OrderItemInfoResp> getAllItemsOfOrder(Long id) {
+        ClientOrder clientOrder = getClientOrderFromDB(id);
+        List<OrderItem> orderItemList = clientOrder.getOrderItemList();
+        return orderItemMapper.toOrderItemInfoRespList(orderItemList);
+    }
+
+    @Override
+    public void updateOrderItemList(ClientOrder clientOrder){
+        clientOrderRepository.save(clientOrder);
+    }
+
 }

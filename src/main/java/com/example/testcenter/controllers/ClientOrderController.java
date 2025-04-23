@@ -3,6 +3,7 @@ package com.example.testcenter.controllers;
 
 import com.example.testcenter.model.dto.request.ClientOrderInfoReq;
 import com.example.testcenter.model.dto.response.ClientOrderInfoResp;
+import com.example.testcenter.model.dto.response.OrderItemInfoResp;
 import com.example.testcenter.model.enums.OrderStatus;
 import com.example.testcenter.service.ClientOrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,5 +59,13 @@ public class ClientOrderController {
     public List <OrderStatus> getAllOrderStatus() {
         return clientOrderService.getAllOrderStatus();
     }
+
+    @GetMapping("/{id}/orderItems")
+    @Operation(summary = "Получить все элементы заявки")
+    public List<OrderItemInfoResp> getAllItemsOfOrder (@PathVariable ("id") Long id){
+        return clientOrderService.getAllItemsOfOrder(id);
+    }
+
+
 
 }
