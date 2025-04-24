@@ -20,18 +20,17 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 //@ToString
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class EquipExam2InfoReq {
 
     @Schema(description = "Оборуование")
     @NotNull(message = "Оборудование должно быть заполнено")
     private EquipmentInfoResp equipment;
 
+
     @Schema(description = "Испытание")
     @NotNull(message = "Испытание должно быть заполнено")
     private ExamInfoResp exam;
 
-    @NotEmpty
-    @Schema(description = "Доступность")
-    private Availability availability;
+
 }

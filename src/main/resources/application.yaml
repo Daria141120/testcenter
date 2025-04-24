@@ -26,4 +26,3 @@ spring:
         initialization: true  # для заполнения
 
 
-

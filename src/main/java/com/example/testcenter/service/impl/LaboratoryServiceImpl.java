@@ -95,8 +95,8 @@ public class LaboratoryServiceImpl implements LaboratoryService {
         LaboratoryInfoResp laboratoryInfoResp = objectMapper.convertValue(laboratory, LaboratoryInfoResp.class);
 
         List <Employee> employeeList = laboratory.getEmployeeList();
-        List <EmployeeInfoResp> infoRespList = employeeList.stream().
-                map(employee -> objectMapper.convertValue(employee, EmployeeInfoResp.class))
+        List <EmployeeInfoResp> infoRespList = employeeList.stream()
+                .map(employee -> objectMapper.convertValue(employee, EmployeeInfoResp.class))
                 .collect(Collectors.toList());
 
         infoRespList.forEach(employeeInfoResp -> employeeInfoResp.setLaboratory(laboratoryInfoResp));

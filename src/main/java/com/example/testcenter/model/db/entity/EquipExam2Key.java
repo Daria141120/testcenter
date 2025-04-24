@@ -1,9 +1,7 @@
 package com.example.testcenter.model.db.entity;
 
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
@@ -14,6 +12,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class EquipExam2Key implements Serializable {
 
     private static final long serialVersionUID = 8488050786082163956L;
@@ -38,5 +38,16 @@ public class EquipExam2Key implements Serializable {
     public int hashCode() {
         return Objects.hash(equipmentId, examId);
     }
+
+
+    @Override
+    public String toString() {
+        return "EquipExam2Key{" +
+                "equipmentId=" + equipmentId +
+                ", examId=" + examId +
+                '}';
+    }
+
+
 
 }

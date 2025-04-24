@@ -2,9 +2,7 @@ package com.example.testcenter.controllers;
 
 
 import com.example.testcenter.model.dto.request.ExamInfoReq;
-import com.example.testcenter.model.dto.request.LaboratoryInfoReq;
 import com.example.testcenter.model.dto.response.ExamInfoResp;
-import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
 import com.example.testcenter.service.ExamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

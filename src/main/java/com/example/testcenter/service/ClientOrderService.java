@@ -1,13 +1,17 @@
 package com.example.testcenter.service;
 
+import com.example.testcenter.model.db.entity.ClientOrder;
 import com.example.testcenter.model.dto.request.ClientOrderInfoReq;
 import com.example.testcenter.model.dto.response.ClientOrderInfoResp;
+import com.example.testcenter.model.dto.response.OrderItemInfoResp;
 import com.example.testcenter.model.enums.OrderStatus;
 
 import java.util.List;
 
 
 public interface ClientOrderService {
+
+    ClientOrder getClientOrderFromDB(Long id);
 
     ClientOrderInfoResp getClientOrder(Long id);
 
@@ -21,6 +25,7 @@ public interface ClientOrderService {
 
     List<OrderStatus> getAllOrderStatus();
 
+    List<OrderItemInfoResp> getAllItemsOfOrder(Long id);
 
-
+    void updateOrderItemList(ClientOrder clientOrder);
 }

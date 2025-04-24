@@ -3,7 +3,6 @@ package com.example.testcenter.model.db.entity;
 
 import javax.persistence.*;
 
-import com.example.testcenter.model.enums.ClientStatus;
 import com.example.testcenter.model.enums.ExamStatus;
 import lombok.Getter;
 import lombok.Setter;

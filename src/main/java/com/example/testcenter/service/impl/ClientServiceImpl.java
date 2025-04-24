@@ -45,7 +45,8 @@ public class ClientServiceImpl implements ClientService {
     public ClientInfoResp addClient(ClientInfoReq clientInfoReq) {
 
         clientRepository.findFirstByEmailOrPhone(clientInfoReq.getEmail(), clientInfoReq.getPhone()).ifPresent(
-                client -> {throw new CommonBackendException("Client already exist", HttpStatus.CONFLICT);
+                client -> {
+                    throw new CommonBackendException("Client already exist", HttpStatus.CONFLICT);
                 });
 
         Client client = objectMapper.convertValue(clientInfoReq, Client.class);

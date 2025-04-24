@@ -2,7 +2,9 @@ package com.example.testcenter.controllers;
 
 
 import com.example.testcenter.model.dto.request.EquipmentInfoReq;
+import com.example.testcenter.model.dto.response.EquipExam2InfoResp;
 import com.example.testcenter.model.dto.response.EquipmentInfoResp;
+import com.example.testcenter.model.dto.response.ExamInfoResp;
 import com.example.testcenter.service.EquipmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,6 +52,18 @@ public class EquipmentController {
         return equipmentService.getAllEquipment();
     }
 
+    @GetMapping("/{id}/exams")
+    @Operation(summary = "Получить испытания по id оборудования")
+    public List<ExamInfoResp> getEquipmentExams (@PathVariable ("id") Long id){
+        return equipmentService.getEquipmentExams(id);
+    }
+
+
+    @PutMapping("/{id}/equipmentsAdd")
+    @Operation(summary = "Добавить испытания к оборудованию")
+    public List<EquipExam2InfoResp> addEquipmentExams(@PathVariable("id") Long id, @RequestBody @Valid List <ExamInfoResp> examsRespList){
+        return equipmentService.addEquipmentExams(id, examsRespList);
+    }
 
 
 }

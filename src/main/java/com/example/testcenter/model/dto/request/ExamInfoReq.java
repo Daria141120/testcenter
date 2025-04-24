@@ -1,6 +1,7 @@
 package com.example.testcenter.model.dto.request;
 
 import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class ExamInfoReq {
 
     @NotEmpty

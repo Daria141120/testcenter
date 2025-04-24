@@ -2,7 +2,6 @@ package com.example.testcenter.service.impl;
 
 import com.example.testcenter.exception.CommonBackendException;
 import com.example.testcenter.model.db.entity.Exam;
-import com.example.testcenter.model.db.entity.Laboratory;
 import com.example.testcenter.model.enums.ExamStatus;
 import com.example.testcenter.model.enums.LaboratoryStatus;
 import com.example.testcenter.service.LaboratoryService;
@@ -29,9 +28,10 @@ public class ExamServiceImpl implements ExamService {
     private final ObjectMapper objectMapper;
     private final LaboratoryService laboratoryService;
 
-    private Exam getExamFromDB(Long id) {
+    @Override
+    public Exam getExamFromDB(Long id) {
         Optional<Exam>  examFromDB = examRepository.findById(id);
-        final String errMsg = String.format("exam with id : %s not found", id);
+        final String errMsg = String.format("examId with id : %s not found", id);
         return examFromDB.orElseThrow(() ->  new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
 

@@ -14,23 +14,29 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "tasks")
-public class TaskList {
+public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+   // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+
+    @OneToOne (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @MapsId
     @JoinColumn(name = "order_item_id")
     private OrderItem orderItem;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
+
+
+
+
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -39,7 +45,6 @@ public class TaskList {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updateAt;
-
 
 
 }
