@@ -49,23 +49,23 @@ public class ClientOrderController {
 
     @GetMapping("/all")
     @Operation(summary = "Получить все заявки")
-    public List<ClientOrderInfoResp> getAllClientOrder (){
+    public List<ClientOrderInfoResp> getAllClientOrder() {
         return clientOrderService.getAllClientOrder();
     }
 
 
-    @GetMapping("/allStatus")                   // используется для вбора статуса при обновлении информации о состоянии заявки
+    @GetMapping("/allStatus")
+    // используется для выбора статуса при обновлении информации о состоянии заявки
     @Operation(summary = "Получить все возможные статусы заявок")
-    public List <OrderStatus> getAllOrderStatus() {
+    public List<OrderStatus> getAllOrderStatus() {
         return clientOrderService.getAllOrderStatus();
     }
 
     @GetMapping("/{id}/orderItems")
     @Operation(summary = "Получить все элементы заявки")
-    public List<OrderItemInfoResp> getAllItemsOfOrder (@PathVariable ("id") Long id){
+    public List<OrderItemInfoResp> getAllItemsOfOrder(@PathVariable("id") Long id) {
         return clientOrderService.getAllItemsOfOrder(id);
     }
-
 
 
 }

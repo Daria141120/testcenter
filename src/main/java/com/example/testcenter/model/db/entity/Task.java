@@ -35,9 +35,6 @@ public class Task {
     private TaskStatus status;
 
 
-
-
-
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

@@ -6,10 +6,12 @@ import com.example.testcenter.model.db.entity.ClientOrder;
 import com.example.testcenter.model.db.entity.OrderItem;
 import com.example.testcenter.model.db.repository.OrderItemRepository;
 import com.example.testcenter.model.dto.request.OrderItemInfoReq;
+import com.example.testcenter.model.dto.request.TaskInfoReq;
 import com.example.testcenter.model.dto.response.OrderItemInfoResp;
 import com.example.testcenter.model.enums.OrderStatus;
 import com.example.testcenter.service.ClientOrderService;
 import com.example.testcenter.service.OrderItemService;
+import com.example.testcenter.service.TaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     private final ObjectMapper objectMapper;
     private final OrderItemMapper orderItemMapper;
     private final ClientOrderService clientOrderService;
+    private final TaskService taskService;
 
     @Override
     public OrderItem getOrderItemFromDB(Long id) {
@@ -58,7 +61,13 @@ public class OrderItemServiceImpl implements OrderItemService {
         orderItemList.add(orderItemSaved);
         clientOrderService.updateOrderItemList(clientOrder);
 
-        return orderItemMapper.toOrderItemInfoResp(orderItemSaved);
+        //  создать сразу запись в задачах
+        OrderItemInfoResp orderItemResp = orderItemMapper.toOrderItemInfoResp(orderItemSaved);
+        TaskInfoReq taskInfoReq = new TaskInfoReq();
+        taskInfoReq.setOrderItem(orderItemResp);
+        taskService.addTask(taskInfoReq);
+
+        return orderItemResp;
     }
 
     @Override
