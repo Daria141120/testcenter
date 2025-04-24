@@ -97,7 +97,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
 
     @Override
     public List<ClientOrderInfoResp> getAllClientOrder() {
-        return clientOrderRepository.findAll().stream().map((clientOrder -> objectMapper.convertValue(clientOrder, ClientOrderInfoResp.class)))
+        return clientOrderRepository.findAll().stream().map(clientOrder -> objectMapper.convertValue(clientOrder, ClientOrderInfoResp.class))
                 .collect(Collectors.toList());
     }
 

@@ -21,7 +21,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 //@ToString
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class EmployeeInfoReq {
 
     @NotEmpty(message = "Email должен быть заполнен") // лишнее?

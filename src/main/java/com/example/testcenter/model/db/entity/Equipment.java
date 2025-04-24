@@ -10,6 +10,7 @@ import lombok.Setter;
 
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -32,10 +33,9 @@ public class Equipment {
     @Enumerated(EnumType.STRING)
     private EquipStatus status;
 
-    @OneToMany(mappedBy = "equipment", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "equipment")
     @JsonManagedReference
     private List<EquipExam2> equipExam2List;
-
 
 
 }

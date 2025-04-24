@@ -33,3 +33,7 @@
 --INSERT INTO order_items (order_id, equipment_id, exam_id, quantity) VALUES
 --(1, 5, 2, 11),
 --(2, 4, 3, 10);
+
+--INSERT INTO tasks (order_item_id, employee_id, status) VALUES
+--(5, 5, 'CREATED'),
+--(6, 5, 'CREATED');

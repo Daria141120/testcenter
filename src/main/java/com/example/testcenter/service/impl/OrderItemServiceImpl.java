@@ -12,7 +12,6 @@ import com.example.testcenter.service.ClientOrderService;
 import com.example.testcenter.service.OrderItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,6 +30,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     private final OrderItemMapper orderItemMapper;
     private final ClientOrderService clientOrderService;
 
+    @Override
     public OrderItem getOrderItemFromDB(Long id) {
           Optional<OrderItem> orderItemFromDB = orderItemRepository.findById(id);
           final String errMsg = String.format("orderItem with id : %s not found", id);
@@ -38,7 +38,6 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    @SneakyThrows
     public OrderItemInfoResp getOrderItem(Long id) {
         OrderItem orderItemFromDB = getOrderItemFromDB(id);
         return orderItemMapper.toOrderItemInfoResp(orderItemFromDB);

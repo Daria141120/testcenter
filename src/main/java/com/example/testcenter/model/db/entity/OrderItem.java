@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @Entity
@@ -28,8 +30,8 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
-            @JoinColumn(name = "equipmentId", nullable = false),
-            @JoinColumn(name = "examId", nullable = false)
+            @JoinColumn(name = "equipmentId", nullable = false, referencedColumnName = "equipment_id"),
+            @JoinColumn(name = "examId", nullable = false, referencedColumnName = "exam_id")
     })
     private EquipExam2 equipExam;
 
