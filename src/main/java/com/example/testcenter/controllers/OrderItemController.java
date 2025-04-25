@@ -38,7 +38,7 @@ public class OrderItemController {
     }
 
     @GetMapping("/all")
-    @Operation(summary = "Получить все записи из таблицы элементы заявок")
+    @Operation(summary = "Получить все записи из таблицы элементы заявок (по id заявки - опционально)")
     public List<OrderItemInfoResp> getAllOrderItem(@RequestParam (required = false) Long idOrder){
         return orderItemService.getAllOrderItem(idOrder);
     }

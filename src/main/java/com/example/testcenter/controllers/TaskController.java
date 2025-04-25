@@ -65,6 +65,14 @@ public class TaskController {
         return taskService.getAllNewTasks();
     }
 
+    @GetMapping("/allNotCompletedTask")
+    @Operation(summary = "Получить все незавершенные задачи по номеру заявки(опционально)")
+    public List<TaskInfoResp> getAllNotCompletedTask(@RequestParam (required = false) Long idOrder){
+        return taskService.getAllNotCompletedTask(idOrder);
+    }
+
+
+
 
 
 }

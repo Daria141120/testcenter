@@ -2,6 +2,7 @@ package com.example.testcenter.service.impl;
 
 
 import com.example.testcenter.exception.CommonBackendException;
+import com.example.testcenter.mapper.ClientOrderMapper;
 import com.example.testcenter.mapper.OrderItemMapper;
 import com.example.testcenter.model.db.entity.Client;
 import com.example.testcenter.model.db.entity.ClientOrder;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +35,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     private final ClientService clientService;
     private final OrderItemMapper orderItemMapper;
     private final ObjectMapper objectMapper;
+    private final ClientOrderMapper clientOrderMapper;
 
     @Override
     public ClientOrder getClientOrderFromDB(Long id) {
@@ -81,9 +84,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
 
     @Override
     public ClientOrderInfoResp updateClientOrderStatus(Long id, String status) {
-
-        List <String> list = getAllOrderStatus().stream().map(Enum::name).collect(Collectors.toList());
-        if (!list.contains(status)) {
+        if (!checkStatusExist(status)) {
             throw new CommonBackendException("Error in the status, there is no such status.", HttpStatus.BAD_REQUEST);
         }
 
@@ -96,16 +97,24 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     }
 
     @Override
-    public List<ClientOrderInfoResp> getAllClientOrder() {
-        return clientOrderRepository.findAll().stream().map(clientOrder -> objectMapper.convertValue(clientOrder, ClientOrderInfoResp.class))
-                .collect(Collectors.toList());
+    public List<ClientOrderInfoResp> getAllClientOrder(String status) {
+        List<ClientOrderInfoResp> respList;
+
+        if (StringUtils.hasText(status)){
+
+            if (!checkStatusExist(status)) {
+                throw new CommonBackendException("Error in the status, there is no such status.", HttpStatus.BAD_REQUEST);
+            }
+            OrderStatus orderStatus = OrderStatus.valueOf(status);
+            respList = clientOrderMapper.toClientOrderInfoRespList(clientOrderRepository.findAllByStatus(orderStatus));
+
+        } else {
+            respList = clientOrderMapper.toClientOrderInfoRespList(clientOrderRepository.findAll());
+        }
+
+        return respList;
     }
 
-
-    @Override
-    public List<OrderStatus> getAllOrderStatus() {
-        return Arrays.stream(OrderStatus.values()).collect(Collectors.toList());
-    }
 
     @Override
     public List<OrderItemInfoResp> getAllItemsOfOrder(Long id) {
@@ -117,6 +126,17 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     @Override
     public void updateOrderItemList(ClientOrder clientOrder){
         clientOrderRepository.save(clientOrder);
+    }
+
+    @Override
+    public List<OrderStatus> getAllOrderStatus() {
+        return Arrays.stream(OrderStatus.values()).collect(Collectors.toList());
+    }
+
+
+    private boolean checkStatusExist(String status){
+        List <String> list = getAllOrderStatus().stream().map(Enum::name).collect(Collectors.toList());
+        return list.contains(status);
     }
 
 }

@@ -48,9 +48,9 @@ public class ClientOrderController {
     }
 
     @GetMapping("/all")
-    @Operation(summary = "Получить все заявки")
-    public List<ClientOrderInfoResp> getAllClientOrder() {
-        return clientOrderService.getAllClientOrder();
+    @Operation(summary = "Получить все заявки(по статусу - опционально)")
+    public List<ClientOrderInfoResp> getAllClientOrder(@RequestParam (required = false) String status) {
+        return clientOrderService.getAllClientOrder(status);
     }
 
 
@@ -66,6 +66,8 @@ public class ClientOrderController {
     public List<OrderItemInfoResp> getAllItemsOfOrder(@PathVariable("id") Long id) {
         return clientOrderService.getAllItemsOfOrder(id);
     }
+
+
 
 
 }

@@ -13,7 +13,7 @@ import com.example.testcenter.model.dto.response.TaskInfoResp;
 import com.example.testcenter.model.enums.EmployeeStatus;
 import com.example.testcenter.model.enums.OrderStatus;
 import com.example.testcenter.model.enums.TaskStatus;
-import com.example.testcenter.service.OrderItemService;
+import com.example.testcenter.service.ClientOrderService;
 import com.example.testcenter.service.TaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +38,8 @@ public class TaskServiceImpl implements TaskService {
     private final ObjectMapper objectMapper;
     private final TaskMapper taskMapper;
     private final EmployeeMapper employeeMapper;
+    private final ClientOrderService clientOrderService;
 
-//    private final OrderItemService orderItemService;
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -59,7 +59,6 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @Override
     public TaskInfoResp addTask(TaskInfoReq req) {
-//        orderItemService.getOrderItemFromDB(req.getOrderItem().getId());  // check  ordItem
 
         Task task = objectMapper.convertValue(req, Task.class);
         if (req.getEmployee() == null) {
@@ -113,20 +112,16 @@ public class TaskServiceImpl implements TaskService {
         Task taskFromDB = getTaskFromDB(id);
         taskFromDB.setStatus(taskStatus);
         Task taskSaved = taskRepository.save(taskFromDB);
+
+        if (taskStatus == TaskStatus.CLOSED){
+            Long orderId = taskSaved.getOrderItem().getClientOrder().getId();
+            if (  getCountNotCompletedTaskByOrderId(orderId) == 0 ){
+                clientOrderService.updateClientOrderStatus(orderId, OrderStatus.COMPLETED.name());
+            }
+        }
+
         return taskMapper.toTaskInfoResp(taskSaved);
     }
-
-    @Override
-    public List<TaskStatus> getAllTaskStatus() {
-        return Arrays.stream(TaskStatus.values()).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TaskInfoResp> getAllNewTasks() {
-        List<Task> taskList = taskRepository.findAllByStatus(TaskStatus.CREATED);
-        return taskMapper.toTaskInfoRespList(taskList);
-    }
-
 
     @Override
     public List<TaskInfoResp> getAllTasks() {
@@ -134,8 +129,34 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toTaskInfoRespList(taskList);
     }
 
+    @Override
+    public List<TaskStatus> getAllTaskStatus() {
+        return Arrays.stream(TaskStatus.values()).collect(Collectors.toList());
+    }
 
 
+    @Override
+    public List<TaskInfoResp> getAllNewTasks() {
+        List<Task> taskList = taskRepository.findAllByStatus(TaskStatus.CREATED);
+        return taskMapper.toTaskInfoRespList(taskList);
+    }
+
+    @Override
+    public List<TaskInfoResp> getAllNotCompletedTask(Long idOrder) {
+        List<Task> taskList;
+        if (idOrder != null){
+            taskList = taskRepository.findAllNotCompletedTask(idOrder);
+        } else {
+            taskList = taskRepository.findAllByStatusNot(TaskStatus.CLOSED);
+        }
+        System.out.println("количество невыполненных задач"+getCountNotCompletedTaskByOrderId(idOrder));
+        return taskMapper.toTaskInfoRespList(taskList);
+    }
+
+
+    private Long getCountNotCompletedTaskByOrderId(Long idOrder) {
+        return taskRepository.countByStatusNotAndOrderItem_ClientOrder_Id(TaskStatus.CLOSED, idOrder);
+    }
 
 
 

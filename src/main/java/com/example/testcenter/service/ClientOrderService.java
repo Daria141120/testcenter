@@ -21,7 +21,7 @@ public interface ClientOrderService {
 
     ClientOrderInfoResp updateClientOrderStatus(Long id, String status);
 
-    List<ClientOrderInfoResp> getAllClientOrder();
+    List<ClientOrderInfoResp> getAllClientOrder(String status);
 
     List<OrderStatus> getAllOrderStatus();
 

@@ -21,4 +21,6 @@ public interface TaskService {
     List<TaskStatus> getAllTaskStatus();
 
     List<TaskInfoResp> getAllNewTasks();
+
+    List<TaskInfoResp> getAllNotCompletedTask(Long idOrder);
 }
