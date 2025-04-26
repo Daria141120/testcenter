@@ -9,18 +9,23 @@ import com.example.testcenter.model.db.repository.EmployeeRepository;
 import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
+import com.example.testcenter.model.dto.response.TaskInfoResp;
 import com.example.testcenter.model.enums.EmployeeStatus;
 import com.example.testcenter.model.enums.LaboratoryStatus;
 import com.example.testcenter.service.EmployeeService;
 import com.example.testcenter.service.LaboratoryService;
+import com.example.testcenter.service.TaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,6 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final ObjectMapper objectMapper;
     private final LaboratoryService laboratoryService;
     private final EmployeeMapper employeeMapper;
+    private final TaskService taskService;
 
     private Employee getEmployeeFromDB (Long id){
         Optional <Employee> employeeFromDB = employeeRepository.findById(id);
@@ -57,7 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         Employee employee = objectMapper.convertValue(employeeInfoReq, Employee.class);
-        employee.setStatus(EmployeeStatus.CREATED);
+        employee.setStatus(EmployeeStatus.ACTIVE);
         Employee employeeSaved = employeeRepository.save(employee);
 
         Laboratory laboratoryFromDB = laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId());
@@ -80,7 +86,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeFromDB.setMiddleName( employeeForUpdate.getMiddleName() == null ? employeeFromDB.getMiddleName() : employeeForUpdate.getMiddleName());
         employeeFromDB.setPost( employeeForUpdate.getPost() == null ? employeeFromDB.getPost() : employeeForUpdate.getPost());
 
-        employeeFromDB.setStatus(EmployeeStatus.UPDATED);
         Employee employeeSaved = employeeRepository.save(employeeFromDB);
 
         return employeeMapper.toEmployeeInfoResp(employeeSaved);
@@ -95,10 +100,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public List<EmployeeInfoResp> getAllEmployee() {
-        List<Employee> employees = employeeRepository.findAll();
-        return employeeMapper.toEmployeeInfoRespList(employees);
+    public List<EmployeeInfoResp> getAllEmployee(String status) {
+        List<EmployeeInfoResp> respList;
+
+        if (StringUtils.hasText(status)) {
+
+            List<String> listStatus = getAllEmployeeStatus().stream().map(Enum::name).collect(Collectors.toList());
+            if (!listStatus.contains(status)) {
+                throw new CommonBackendException("Error in the status, there is no such status.", HttpStatus.BAD_REQUEST);
+            } else {
+                EmployeeStatus employeeStatus = EmployeeStatus.valueOf(status);
+                respList = employeeMapper.toEmployeeInfoRespList(employeeRepository.findAllByStatus(employeeStatus));
+            }
+
+        } else {
+            respList = employeeMapper.toEmployeeInfoRespList(employeeRepository.findAll());
+        }
+        return respList;
     }
+
+
 
     @Override
     public EmployeeInfoResp changeLab(Long id, LaboratoryInfoResp lab) {
@@ -114,7 +135,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         laboratoryService.updateLabListEmployee(oldLaboratory);
 
         employeeFromDB.setLaboratory(laboratoryForUpdate);
-        employeeFromDB.setStatus(EmployeeStatus.UPDATED);
         Employee employeeSaved = employeeRepository.save(employeeFromDB);
 
         Laboratory newLab = laboratoryService.getLaboratoryFromDB(lab.getId());
@@ -122,6 +142,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         laboratoryService.updateLabListEmployee(newLab);
 
         return employeeMapper.toEmployeeInfoResp(employeeSaved);
+    }
+
+
+    @Override
+    public List<EmployeeStatus> getAllEmployeeStatus() {
+        return Arrays.stream(EmployeeStatus.values()).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskInfoResp> getAllAssignedTasks(Long id) {
+        return taskService.getAllEmployeeAssignedTasks(id);
     }
 
 

@@ -4,6 +4,8 @@ package com.example.testcenter.controllers;
 import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
+import com.example.testcenter.model.dto.response.TaskInfoResp;
+import com.example.testcenter.model.enums.EmployeeStatus;
 import com.example.testcenter.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,9 +51,9 @@ public class EmployeeController {
 
 
     @GetMapping("/all")
-    @Operation(summary = "Получить всех сотрудников")
-    public List<EmployeeInfoResp> getAllEmployee (){
-        return employeeService.getAllEmployee();
+    @Operation(summary = "Получить всех сотрудников (по  статусу работает/уволен - опционально)")
+    public List<EmployeeInfoResp> getAllEmployee (@RequestParam (required = false) String status){
+        return employeeService.getAllEmployee(status);
     }
 
     @PutMapping("/{id}/changeLab")
@@ -59,5 +61,20 @@ public class EmployeeController {
     public EmployeeInfoResp changeLab(@PathVariable("id") Long id, @RequestBody LaboratoryInfoResp lab) {
         return employeeService.changeLab(id, lab);
     }
+
+
+    @GetMapping("/allStatus")
+    @Operation(summary = "Получить статусы сотрудников")
+    public List<EmployeeStatus> getAllEmployeeStatus(){
+        return employeeService.getAllEmployeeStatus();
+    }
+
+
+    @GetMapping("/{id}/assignedTasks")
+    @Operation(summary = "Получить задачи назначенные сотруднику")
+    public List<TaskInfoResp> getAllAssignedTasks(@PathVariable("id") Long id){
+        return employeeService.getAllAssignedTasks(id);
+    }
+
 
 }

@@ -14,9 +14,21 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByStatusNot(TaskStatus status);
 
     @Query("select t from Task t where t.orderItem.clientOrder.id = :orderId and not t.status = 'CLOSED' ")
-    List<Task> findAllNotCompletedTask (@Param("orderId") Long id);
+    List<Task> findAllNotCompletedTask(@Param("orderId") Long id);
 
     long countByStatusNotAndOrderItem_ClientOrder_Id(TaskStatus status, Long id);
+
+    List<Task> findAllByEmployee_IdAndStatus(Long id, TaskStatus status);
+
+    @Query("select t from Task t where t.status = :status and t.orderItem.equipExam.exam.laboratory.id = :labId")
+    List<Task> findAllByStatusAndLab(@Param("status") TaskStatus status, @Param("labId") Long labId);
+
+    @Query("select t from Task t where t.orderItem.equipExam.exam.laboratory.id = :labId")
+    List<Task> findAllByLab(@Param("labId") Long labId);
+
+
+    // аналогично выше... 4 join - :(
+    List<Task> findAllByStatusAndOrderItem_EquipExam_Exam_Laboratory_Id(TaskStatus status, Long id);
 
 
 

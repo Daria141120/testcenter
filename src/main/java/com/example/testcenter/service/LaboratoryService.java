@@ -4,6 +4,7 @@ import com.example.testcenter.model.db.entity.Laboratory;
 import com.example.testcenter.model.dto.request.LaboratoryInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
+import com.example.testcenter.model.dto.response.TaskInfoResp;
 
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface LaboratoryService {
     List<EmployeeInfoResp> getLaboratoryEmployees(Long id);
 
     void updateLabListEmployee(Laboratory laboratory);
+
+    List<TaskInfoResp> getAllTasks(Long id, String status);
 }

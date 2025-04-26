@@ -7,8 +7,10 @@ import com.example.testcenter.model.db.repository.LaboratoryRepository;
 import com.example.testcenter.model.dto.request.LaboratoryInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
+import com.example.testcenter.model.dto.response.TaskInfoResp;
 import com.example.testcenter.model.enums.LaboratoryStatus;
 import com.example.testcenter.service.LaboratoryService;
+import com.example.testcenter.service.TaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
 
     private final ObjectMapper objectMapper;
     private final LaboratoryRepository laboratoryRepository;
+    private final TaskService taskService;
 
     @Override
     public Laboratory getLaboratoryFromDB(Long id){
@@ -106,6 +109,11 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     @Override
     public void updateLabListEmployee(Laboratory laboratory){
         laboratoryRepository.save(laboratory);
+    }
+
+    @Override
+    public List<TaskInfoResp> getAllTasks(Long id, String status) {
+        return taskService.getAllTasksByLaboratory(id, status);
     }
 
 

@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -102,8 +103,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskInfoResp changeTaskStatus(Long id, String status) {
-        List<String> list = getAllTaskStatus().stream().map(Enum::name).collect(Collectors.toList());
-        if (!list.contains(status)) {
+
+        if (!checkStatusExist(status)){
             throw new CommonBackendException("Error in the status, there is no such status.", HttpStatus.BAD_REQUEST);
         }
 
@@ -158,6 +159,34 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.countByStatusNotAndOrderItem_ClientOrder_Id(TaskStatus.CLOSED, idOrder);
     }
 
+    @Override
+    public List<TaskInfoResp> getAllEmployeeAssignedTasks(Long id) {
+        List<Task> taskList = taskRepository.findAllByEmployee_IdAndStatus(id, TaskStatus.ASSIGNED);
+        return taskMapper.toTaskInfoRespList(taskList);
+    }
+
+    @Override
+    public List<TaskInfoResp> getAllTasksByLaboratory(Long id, String status) {
+        List<Task> taskList;
+
+        if (StringUtils.hasText(status)){
+            if (!checkStatusExist(status)){
+                throw new CommonBackendException("Error in the status, there is no such status.", HttpStatus.BAD_REQUEST);
+            }
+            TaskStatus taskStatus = TaskStatus.valueOf(status);
+            taskList = taskRepository.findAllByStatusAndLab(taskStatus, id);
+        } else {
+            taskList = taskRepository.findAllByLab(id);
+        }
+
+        return taskMapper.toTaskInfoRespList(taskList);
+    }
+
+
+    private boolean checkStatusExist(String status){
+        List<String> list = getAllTaskStatus().stream().map(Enum::name).collect(Collectors.toList());
+        return list.contains(status);
+    }
 
 
 }

@@ -23,4 +23,8 @@ public interface TaskService {
     List<TaskInfoResp> getAllNewTasks();
 
     List<TaskInfoResp> getAllNotCompletedTask(Long idOrder);
+
+    List<TaskInfoResp> getAllEmployeeAssignedTasks(Long id);
+
+    List<TaskInfoResp> getAllTasksByLaboratory(Long id, String status);
 }
