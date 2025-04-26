@@ -40,7 +40,7 @@ public class ClientOrder {
     @JoinColumn(name = "client_id")
     private Client client;
 
-    @Column(name = "order_number")
+    @Column(name = "order_number", unique = true)
     private String orderNumber;
 
     @OneToMany(mappedBy = "clientOrder")
