@@ -28,4 +28,6 @@ public interface ClientOrderService {
     List<OrderItemInfoResp> getAllItemsOfOrder(Long id);
 
     void updateOrderItemList(ClientOrder clientOrder);
+
+    String getStatusByNumber(String numberOrder);
 }

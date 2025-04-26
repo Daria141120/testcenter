@@ -40,6 +40,9 @@ public class ClientOrder {
     @JoinColumn(name = "client_id")
     private Client client;
 
+    @Column(name = "order_number")
+    private String orderNumber;
+
     @OneToMany(mappedBy = "clientOrder")
     @JsonManagedReference
     private List<OrderItem> orderItemList;

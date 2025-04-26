@@ -67,7 +67,10 @@ public class ClientOrderController {
         return clientOrderService.getAllItemsOfOrder(id);
     }
 
-
-
+    @GetMapping("/checkStatus")
+    @Operation(summary = "Получить статус заявки по уникальному номеру")
+    public String getStatusByNumber(@RequestParam(required = true) String orderNumber) {
+        return clientOrderService.getStatusByNumber(orderNumber);
+    }
 
 }

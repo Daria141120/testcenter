@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +58,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
 
         ClientOrder clientOrder = objectMapper.convertValue(clientOrderInfoReq, ClientOrder.class);
         clientOrder.setStatus(OrderStatus.CREATED);
+        clientOrder.setOrderNumber(generateUniqueOrderNumber());
 
         clientOrder = clientOrderRepository.save(clientOrder);
         return objectMapper.convertValue(clientOrder, ClientOrderInfoResp.class);
@@ -128,9 +130,19 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         clientOrderRepository.save(clientOrder);
     }
 
+
     @Override
     public List<OrderStatus> getAllOrderStatus() {
         return Arrays.stream(OrderStatus.values()).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getStatusByNumber(String orderNumber) {
+        final String errMsg = String.format("order with number : %s not found", orderNumber);
+        ClientOrder clientOrderFromDB = clientOrderRepository.findByOrderNumber(orderNumber)
+                .orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
+
+        return clientOrderFromDB.getStatus().name();
     }
 
 
@@ -138,5 +150,14 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         List <String> list = getAllOrderStatus().stream().map(Enum::name).collect(Collectors.toList());
         return list.contains(status);
     }
+
+    private String generateUniqueOrderNumber() {
+        int currentYear = LocalDateTime.now().getYear();
+        LocalDateTime firstDayYear = LocalDateTime.of(currentYear, 1, 1, 1, 0);
+        long countOrdersByYear = clientOrderRepository.countByCreatedAtBetween(firstDayYear, LocalDateTime.now());
+        return "K-"+currentYear+"-"+(countOrdersByYear+1);
+    }
+
+
 
 }

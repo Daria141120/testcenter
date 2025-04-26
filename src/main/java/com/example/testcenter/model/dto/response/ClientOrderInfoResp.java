@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import javax.persistence.Column;
+
 
 @Getter
 @Setter
@@ -22,6 +24,9 @@ public class ClientOrderInfoResp extends ClientOrderInfoReq {
 
     @Schema(description = "Состояние заявки")
     private OrderStatus status;
+
+    @Schema(description = "Номер заявки")
+    private String OrderNumber;
 
 
 

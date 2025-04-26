@@ -11,7 +11,4 @@ public interface ClientRepository extends JpaRepository <Client, Long> {
     Optional<Client> findFirstByEmailOrPhone(String email, String phone);
 
 
-
-
-
 }
