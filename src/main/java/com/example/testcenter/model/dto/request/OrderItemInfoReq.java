@@ -3,6 +3,7 @@ package com.example.testcenter.model.dto.request;
 
 import com.example.testcenter.model.dto.response.ClientOrderInfoResp;
 import com.example.testcenter.model.dto.response.EquipExam2InfoResp;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +20,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 //@ToString
-//@JsonIgnoreProperties(ignoreUnknown = true)
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderItemInfoReq {
 
     @NotNull(message = "Заявка должна быть заполнена")

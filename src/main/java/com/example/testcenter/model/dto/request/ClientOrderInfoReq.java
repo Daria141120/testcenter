@@ -2,6 +2,7 @@ package com.example.testcenter.model.dto.request;
 
 
 import com.example.testcenter.model.dto.response.ClientInfoResp;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-//@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ClientOrderInfoReq {
 
     @NotNull(message = "Клиент должен быть заполнен")

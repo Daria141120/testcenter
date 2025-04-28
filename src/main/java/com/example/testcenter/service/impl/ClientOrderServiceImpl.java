@@ -1,6 +1,5 @@
 package com.example.testcenter.service.impl;
 
-
 import com.example.testcenter.exception.CommonBackendException;
 import com.example.testcenter.mapper.ClientOrderMapper;
 import com.example.testcenter.mapper.OrderItemMapper;
@@ -40,38 +39,36 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     private final OrderItemMapper orderItemMapper;
     private final ObjectMapper objectMapper;
     private final ClientOrderMapper clientOrderMapper;
+    private final EmailSenderService emailSenderService;
 
-    @Autowired
-    EmailSenderService emailSenderService;
 
     @Override
     public ClientOrder getClientOrderFromDB(Long id) {
         Optional<ClientOrder> clientOrderFromDB = clientOrderRepository.findById(id);
         final String errMsg = String.format("order with id : %s not found", id);
-        return clientOrderFromDB.orElseThrow(() ->  new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
+        return clientOrderFromDB
+                .orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
 
 
     @Override
     public ClientOrderInfoResp getClientOrder(Long id) {
         ClientOrder clientOrderFromDB = getClientOrderFromDB(id);
-
         return objectMapper.convertValue(clientOrderFromDB, ClientOrderInfoResp.class);
     }
 
     @Override
-    public ClientOrderInfoResp addClientOrder(ClientOrderInfoReq clientOrderInfoReq) {
-        clientService.getClientFromDB(clientOrderInfoReq.getClient().getId());   // проверка что клиент заявки существует
+    public ClientOrderInfoResp addClientOrder(ClientOrderInfoReq req) {
+        clientService.getClientFromDB(req.getClient().getId());   // проверка что клиент заявки существует
 
-        ClientOrder clientOrder = objectMapper.convertValue(clientOrderInfoReq, ClientOrder.class);
+        ClientOrder clientOrder = objectMapper.convertValue(req, ClientOrder.class);
         clientOrder.setStatus(OrderStatus.CREATED);
         clientOrder.setOrderNumber(generateUniqueOrderNumber());
         clientOrder = clientOrderRepository.save(clientOrder);
 
-        String message = String.format("Your order has been accepted. Order number : %s", clientOrder.getOrderNumber());
+        String message = String.format("Your order has been accepted.\nOrder number : %s", clientOrder.getOrderNumber());
         String toEmail = clientOrder.getClient().getEmail();
         String subject = "Create order";
-
         sendMailToClient(toEmail, subject, message);
 
         return objectMapper.convertValue(clientOrder, ClientOrderInfoResp.class);
@@ -79,19 +76,14 @@ public class ClientOrderServiceImpl implements ClientOrderService {
 
 
     @Override
-    public ClientOrderInfoResp updateClientOrder(Long id, ClientOrderInfoReq clientOrderInfoReq) {
-
-
+    public ClientOrderInfoResp updateClientOrder(Long id, ClientOrderInfoReq req) {
         ClientOrder clientOrderFromDB = getClientOrderFromDB(id);
-     //   ClientOrder clientOrderForUpdate = objectMapper.convertValue(clientOrderInfoReq, ClientOrder.class);
 
-       if (clientOrderInfoReq.getClient() != null){
-           clientService.getClientFromDB(clientOrderInfoReq.getClient().getId());   // проверка что клиент заявки существует
-
-           Client client = clientService.getClientFromDB(clientOrderInfoReq.getClient().getId());
-           clientOrderFromDB.setClient(client);
-           clientOrderFromDB = clientOrderRepository.save(clientOrderFromDB);
-       }
+        if (req.getClient() != null) {
+            Client client = clientService.getClientFromDB(req.getClient().getId());
+            clientOrderFromDB.setClient(client);
+            clientOrderFromDB = clientOrderRepository.save(clientOrderFromDB);
+        }
 
         return objectMapper.convertValue(clientOrderFromDB, ClientOrderInfoResp.class);
     }
@@ -109,7 +101,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         clientOrderFromDB.setStatus(orderStatus);
         clientOrderFromDB = clientOrderRepository.save(clientOrderFromDB);
 
-        if (clientOrderFromDB.getStatus() == OrderStatus.COMPLETED){
+        if (clientOrderFromDB.getStatus() == OrderStatus.COMPLETED) {
             String message = String.format("Your order number : %s has been completed ", clientOrderFromDB.getOrderNumber());
             String toEmail = clientOrderFromDB.getClient().getEmail();
             String subject = "Order completed";
@@ -124,7 +116,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     public List<ClientOrderInfoResp> getAllClientOrder(String status) {
         List<ClientOrderInfoResp> respList;
 
-        if (StringUtils.hasText(status)){
+        if (StringUtils.hasText(status)) {
 
             if (!checkStatusExist(status)) {
                 throw new CommonBackendException("Error in the status, there is no such status.", HttpStatus.BAD_REQUEST);
@@ -148,7 +140,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     }
 
     @Override
-    public void updateOrderItemList(ClientOrder clientOrder){
+    public void updateOrderItemList(ClientOrder clientOrder) {
         clientOrderRepository.save(clientOrder);
     }
 
@@ -168,8 +160,8 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     }
 
 
-    private boolean checkStatusExist(String status){
-        List <String> list = getAllOrderStatus().stream().map(Enum::name).collect(Collectors.toList());
+    private boolean checkStatusExist(String status) {
+        List<String> list = getAllOrderStatus().stream().map(Enum::name).collect(Collectors.toList());
         return list.contains(status);
     }
 
@@ -177,21 +169,17 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         int currentYear = LocalDateTime.now().getYear();
         LocalDateTime firstDayYear = LocalDateTime.of(currentYear, 1, 1, 1, 0);
         long countOrdersByYear = clientOrderRepository.countByCreatedAtBetween(firstDayYear, LocalDateTime.now());
-        return "K-"+currentYear+"-"+(countOrdersByYear+1);
+        return "K-" + currentYear + "-" + (countOrdersByYear + 1);
     }
 
-    private void  sendMailToClient(String toEmail, String subject, String text){
-        //String message = String.format("Your order has been accepted. Order number : %s", clientOrder.getOrderNumber());
-        //String toEmail = clientOrder.getClient().getEmail();
-        //String subject = "Create order";
+    private void sendMailToClient(String toEmail, String subject, String text) {
 
         try {
-            emailSenderService.sendEmail(toEmail,subject, text);
-        }catch (MailException mailException){
-            String exMessage = "Problems with sending Emails :  "+mailException.getMessage();
+            emailSenderService.sendEmail(toEmail, subject, text);
+        } catch (MailException mailException) {
+            String exMessage = "Problems with sending Emails :  " + mailException.getMessage();
             log.error(exMessage);
         }
-
 
     }
 
