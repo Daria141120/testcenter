@@ -150,7 +150,7 @@ public class TaskServiceImpl implements TaskService {
         } else {
             taskList = taskRepository.findAllByStatusNot(TaskStatus.CLOSED);
         }
-        System.out.println("количество невыполненных задач"+getCountNotCompletedTaskByOrderId(idOrder));
+       // System.out.println("количество невыполненных задач"+getCountNotCompletedTaskByOrderId(idOrder));
         return taskMapper.toTaskInfoRespList(taskList);
     }
 

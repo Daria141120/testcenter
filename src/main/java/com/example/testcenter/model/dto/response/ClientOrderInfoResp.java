@@ -26,7 +26,7 @@ public class ClientOrderInfoResp extends ClientOrderInfoReq {
     private OrderStatus status;
 
     @Schema(description = "Номер заявки")
-    private String OrderNumber;
+    private String orderNumber;
 
 
 

@@ -14,10 +14,13 @@ import com.example.testcenter.model.dto.response.OrderItemInfoResp;
 import com.example.testcenter.model.enums.OrderStatus;
 import com.example.testcenter.service.ClientOrderService;
 import com.example.testcenter.service.ClientService;
+import com.example.testcenter.service.EmailSenderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -38,6 +41,9 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     private final ObjectMapper objectMapper;
     private final ClientOrderMapper clientOrderMapper;
 
+    @Autowired
+    EmailSenderService emailSenderService;
+
     @Override
     public ClientOrder getClientOrderFromDB(Long id) {
         Optional<ClientOrder> clientOrderFromDB = clientOrderRepository.findById(id);
@@ -49,6 +55,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     @Override
     public ClientOrderInfoResp getClientOrder(Long id) {
         ClientOrder clientOrderFromDB = getClientOrderFromDB(id);
+
         return objectMapper.convertValue(clientOrderFromDB, ClientOrderInfoResp.class);
     }
 
@@ -59,8 +66,14 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         ClientOrder clientOrder = objectMapper.convertValue(clientOrderInfoReq, ClientOrder.class);
         clientOrder.setStatus(OrderStatus.CREATED);
         clientOrder.setOrderNumber(generateUniqueOrderNumber());
-
         clientOrder = clientOrderRepository.save(clientOrder);
+
+        String message = String.format("Your order has been accepted. Order number : %s", clientOrder.getOrderNumber());
+        String toEmail = clientOrder.getClient().getEmail();
+        String subject = "Create order";
+
+        sendMailToClient(toEmail, subject, message);
+
         return objectMapper.convertValue(clientOrder, ClientOrderInfoResp.class);
     }
 
@@ -95,6 +108,15 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         ClientOrder clientOrderFromDB = getClientOrderFromDB(id);
         clientOrderFromDB.setStatus(orderStatus);
         clientOrderFromDB = clientOrderRepository.save(clientOrderFromDB);
+
+        if (clientOrderFromDB.getStatus() == OrderStatus.COMPLETED){
+            String message = String.format("Your order number : %s has been completed ", clientOrderFromDB.getOrderNumber());
+            String toEmail = clientOrderFromDB.getClient().getEmail();
+            String subject = "Order completed";
+
+            sendMailToClient(toEmail, subject, message);
+        }
+
         return objectMapper.convertValue(clientOrderFromDB, ClientOrderInfoResp.class);
     }
 
@@ -158,6 +180,20 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         return "K-"+currentYear+"-"+(countOrdersByYear+1);
     }
 
+    private void  sendMailToClient(String toEmail, String subject, String text){
+        //String message = String.format("Your order has been accepted. Order number : %s", clientOrder.getOrderNumber());
+        //String toEmail = clientOrder.getClient().getEmail();
+        //String subject = "Create order";
+
+        try {
+            emailSenderService.sendEmail(toEmail,subject, text);
+        }catch (MailException mailException){
+            String exMessage = "Problems with sending Emails :  "+mailException.getMessage();
+            log.error(exMessage);
+        }
+
+
+    }
 
 
 }

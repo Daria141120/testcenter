@@ -25,4 +25,17 @@ spring:
       datasource:
         initialization: true  # для заполнения
 
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ktm05d.dd@gmail.com
+    password: wggd jrcu dwvl ipbr
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+      send:
+        from: test-centre@example.com
