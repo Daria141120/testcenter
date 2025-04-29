@@ -146,7 +146,7 @@ public class ClientServiceImplTest {
         clientService.deleteClient(clientFromDB.getId());
 
         verify(clientRepository,times(1)).save(any(Client.class));
-        assertEquals(ClientStatus.DELETED ,clientFromDB.getStatus());
+        assertEquals(ClientStatus.DELETED, clientFromDB.getStatus());
     }
 
     @Test

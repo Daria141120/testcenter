@@ -38,7 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeMapper employeeMapper;
     private final TaskService taskService;
 
-    private Employee getEmployeeFromDB (Long id){
+    public Employee getEmployeeFromDB (Long id){
         Optional <Employee> employeeFromDB = employeeRepository.findById(id);
         final String errMsg = String.format("employee with id : %s not found", id);
         return employeeFromDB.orElseThrow(() ->  new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
@@ -53,7 +53,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeInfoResp addEmployee(EmployeeInfoReq employeeInfoReq) {
-
         employeeRepository.findFirstByEmailAndLastName(employeeInfoReq.getEmail(), employeeInfoReq.getLastName()).ifPresent(
                 employee -> {
                     throw new CommonBackendException("Employee already exist", HttpStatus.CONFLICT);
