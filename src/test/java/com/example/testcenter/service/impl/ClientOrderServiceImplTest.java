@@ -72,7 +72,7 @@ public class ClientOrderServiceImplTest {
 
     @Test(expected = CommonBackendException.class)
     public void getClientOrderFromDBNotFound(){
-        orderService.getClientOrder(1L);
+        orderService.getClientOrderFromDB(1L);
     }
 
     @Test

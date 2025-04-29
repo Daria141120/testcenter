@@ -2,6 +2,7 @@ package com.example.testcenter.model.dto.response;
 
 
 import com.example.testcenter.model.dto.request.ClientInfoReq;
+import com.example.testcenter.model.enums.ClientStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -21,5 +22,8 @@ public class ClientInfoResp extends ClientInfoReq {
 
     @Schema(description = "id")
     private Long id;
+
+    @Schema(description = "Статус клиента")
+    private ClientStatus status;
 
 }

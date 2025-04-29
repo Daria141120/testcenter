@@ -42,14 +42,13 @@ public class ClientServiceImpl implements ClientService {
 
 
     @Override
-    public ClientInfoResp addClient(ClientInfoReq clientInfoReq) {
-
-        clientRepository.findFirstByEmailOrPhone(clientInfoReq.getEmail(), clientInfoReq.getPhone()).ifPresent(
+    public ClientInfoResp addClient(ClientInfoReq req) {
+        clientRepository.findFirstByEmailOrPhone(req.getEmail(), req.getPhone()).ifPresent(
                 client -> {
                     throw new CommonBackendException("Client already exist", HttpStatus.CONFLICT);
                 });
 
-        Client client = objectMapper.convertValue(clientInfoReq, Client.class);
+        Client client = objectMapper.convertValue(req, Client.class);
         client.setStatus(ClientStatus.CREATED);
 
         Client clientSaved = clientRepository.save(client);
@@ -58,9 +57,9 @@ public class ClientServiceImpl implements ClientService {
 
 
     @Override
-    public ClientInfoResp updateClient(Long id, ClientInfoReq clientInfoReq) {
+    public ClientInfoResp updateClient(Long id, ClientInfoReq req) {
         Client clientFromDB = getClientFromDB(id);
-        Client clientForUpdate = objectMapper.convertValue(clientInfoReq, Client.class);
+        Client clientForUpdate = objectMapper.convertValue(req, Client.class);
 
         clientFromDB.setEmail( clientForUpdate.getEmail() == null ? clientFromDB.getEmail() : clientForUpdate.getEmail());
         clientFromDB.setPhone( clientForUpdate.getPhone() == null ? clientFromDB.getPhone() : clientForUpdate.getPhone());
@@ -76,7 +75,6 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void deleteClient(Long id) {
         Client clientFromDB = getClientFromDB(id);
-
         clientFromDB.setStatus(ClientStatus.DELETED);
         clientRepository.save(clientFromDB);
     }
