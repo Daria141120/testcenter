@@ -125,9 +125,9 @@ public class ClientOrderServiceImpl implements ClientOrderService {
             respList = clientOrderMapper.toClientOrderInfoRespList(clientOrderRepository.findAllByStatus(orderStatus));
 
         } else {
-            respList = clientOrderMapper.toClientOrderInfoRespList(clientOrderRepository.findAll());
+            List<ClientOrder> orderList = clientOrderRepository.findAll();
+            respList = clientOrderMapper.toClientOrderInfoRespList(orderList);
         }
-
         return respList;
     }
 
