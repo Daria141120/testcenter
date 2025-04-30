@@ -5,12 +5,10 @@ import com.example.testcenter.mapper.EmployeeMapper;
 import com.example.testcenter.mapper.EmployeeMapperImpl;
 import com.example.testcenter.model.db.entity.Employee;
 import com.example.testcenter.model.db.entity.Laboratory;
-import com.example.testcenter.model.db.entity.Task;
 import com.example.testcenter.model.db.repository.EmployeeRepository;
 import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
-import com.example.testcenter.model.dto.response.TaskInfoResp;
 import com.example.testcenter.model.enums.EmployeeStatus;
 import com.example.testcenter.model.enums.LaboratoryStatus;
 import com.example.testcenter.model.enums.Post;
@@ -132,7 +130,6 @@ public class EmployeeServiceImplTest {
         employeeService.addEmployee(req);
     }
 
-
     @Test
     public void updateEmployee() {
         EmployeeInfoReq req = new EmployeeInfoReq();
@@ -172,7 +169,6 @@ public class EmployeeServiceImplTest {
 
         when(employeeRepository.findById(employeeFromDB.getId())).thenReturn(Optional.of(employeeFromDB));
         when(employeeRepository.save(any(Employee.class))).thenReturn(employeeFromDB);
-
         EmployeeInfoResp employeeResp = employeeService.updateEmployee(employeeFromDB.getId(), req);
 
         assertEquals(employeeFromDB.getFirstName(), employeeResp.getFirstName());
@@ -232,11 +228,48 @@ public class EmployeeServiceImplTest {
         employeeService.getAllEmployee(status);
     }
 
-    @Test
-    public void changeLab() {
+    @Test(expected = CommonBackendException.class)
+    public void changeLabLiq() {
+        LaboratoryInfoResp labResp = new LaboratoryInfoResp();
+        labResp.setName("TestLab");
+        labResp.setId(1L);
 
+        Laboratory lab = new Laboratory();
+        lab.setName(labResp.getName());
+        lab.setId(labResp.getId());
+        lab.setStatus(LaboratoryStatus.LIQUIDATED);
+
+        when(laboratoryService.getLaboratoryFromDB(any(Long.class))).thenReturn(lab);
+        employeeService.changeLab(lab.getId(),labResp);
     }
 
+    @Test
+    public void changeLab() {
+        LaboratoryInfoResp labRespNew = new LaboratoryInfoResp();
+        labRespNew.setId(1L);
 
+        Laboratory labOld = new Laboratory();
+        labOld.setEmployeeList(new ArrayList<>());
+
+        Employee employeeFromDBOlb = new Employee();
+        employeeFromDBOlb.setId(1L);
+        employeeFromDBOlb.setLaboratory(labOld);
+
+        Laboratory labNew = new Laboratory();
+        List<Employee> employeeList = new ArrayList<>();
+        labNew.setId(labRespNew.getId());
+        labNew.setStatus(LaboratoryStatus.CREATED);
+        labNew.setEmployeeList(employeeList);
+
+        Employee employeeFromDBNew = new Employee();
+        employeeFromDBNew.setId(employeeFromDBOlb.getId());
+        employeeFromDBNew.setLaboratory(labNew);
+
+        when(employeeRepository.findById(any(Long.class))).thenReturn(Optional.of(employeeFromDBOlb));
+        when(laboratoryService.getLaboratoryFromDB(any(Long.class))).thenReturn(labNew);
+        when(employeeRepository.save(any(Employee.class))).thenReturn(employeeFromDBNew);
+        EmployeeInfoResp employeeResp = employeeService.changeLab(labNew.getId(),labRespNew);
+        assertEquals(employeeResp.getLaboratory().getId(), labRespNew.getId());
+    }
 
 }

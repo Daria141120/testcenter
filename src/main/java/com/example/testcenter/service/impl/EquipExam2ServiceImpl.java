@@ -28,11 +28,8 @@ public class EquipExam2ServiceImpl implements EquipExam2Service {
     private final EquipExam2Repository equipExam2Repository;
     private final ObjectMapper objectMapper;
     private final EquipExamMapper equipExamMapper;
-//    private final EquipmentService equipmentService;
-//    private final ExamService examService;
 
-
-    private EquipExam2 getEquipExamFromDB (Long id_eq, Long id_exam){
+    public EquipExam2 getEquipExamFromDB (Long id_eq, Long id_exam){
         EquipExam2Key key = new EquipExam2Key(id_eq, id_exam);
         Optional<EquipExam2> equipExam2FromDB = equipExam2Repository.findById(key);
         final String errMsg = String.format("equip-examId with id : %s not found", key);
@@ -46,17 +43,8 @@ public class EquipExam2ServiceImpl implements EquipExam2Service {
         return equipExamMapper.toEquipExam2InfoResp(equipExamFromDB);
     }
 
-
-
     @Override
     public EquipExam2InfoResp addEquipExam(EquipExam2InfoReq req) {
-//        Equipment equipment = equipmentService.getEquipmentFromDB(req.getEquipment().getId());  //проверка что оборуд и испыт существует
-//        Exam exam = examService.getExamFromDB(req.getExam().getId());
-
-//        if (exam.getStatus() == ExamStatus.DELETED || equipment.getStatus() == EquipStatus.DELETED){
-//            throw new CommonBackendException("Equipment or examId have status - DELETED", HttpStatus.BAD_REQUEST);
-//        }
-
         EquipExam2Key key = new EquipExam2Key(req.getEquipment().getId(), req.getExam().getId());
         equipExam2Repository.findById(key).ifPresent(equipExam2 -> {
             throw new CommonBackendException("EquipExam connection already exist", HttpStatus.CONFLICT);

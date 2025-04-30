@@ -187,8 +187,7 @@ public class ClientOrderServiceImplTest {
     @Test(expected = CommonBackendException.class)
     public void updateStatusNotCorrect() {
         String status = "QWERTY";
-        ClientOrderInfoResp orderResp = orderService.updateClientOrderStatus(1L, status);
-        assertEquals(OrderStatus.valueOf(status), orderResp.getStatus());
+        orderService.updateClientOrderStatus(1L, status);
     }
 
 
@@ -204,7 +203,6 @@ public class ClientOrderServiceImplTest {
 
         List<ClientOrderInfoResp> respList = orderService.getAllClientOrder("");
         assertEquals(orderList.size(), respList.size());
-       // assertEquals(orderList.get(1).getId(), respList.get(1).getId());
     }
 
     @Test
