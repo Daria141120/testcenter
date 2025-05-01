@@ -155,8 +155,8 @@ public class ClientServiceImplTest {
         Client client2 = new Client();
         client1.setId(1L);
         client2.setId(2L);
-
         List<Client> clientList = List.of(client1, client2);
+
         when(clientRepository.findAll()).thenReturn(clientList);
         List<ClientInfoResp> respList = clientService.getAllClient();
         assertEquals(clientList.size(), respList.size());

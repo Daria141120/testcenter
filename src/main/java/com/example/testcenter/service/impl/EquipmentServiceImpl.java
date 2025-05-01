@@ -49,12 +49,12 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 
     @Override
-    public EquipmentInfoResp addEquipment(EquipmentInfoReq equipmentInfoReq) {
-        equipmentRepository.findFirstByName(equipmentInfoReq.getName()).ifPresent(
+    public EquipmentInfoResp addEquipment(EquipmentInfoReq req) {
+        equipmentRepository.findFirstByName(req.getName()).ifPresent(
                 equip -> { throw new CommonBackendException("Equipment already exist", HttpStatus.CONFLICT);
                 });
 
-        Equipment equipment = objectMapper.convertValue(equipmentInfoReq, Equipment.class);
+        Equipment equipment = objectMapper.convertValue(req, Equipment.class);
         equipment.setStatus(EquipStatus.CREATED);
 
         equipment = equipmentRepository.save(equipment);
@@ -63,9 +63,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 
     @Override
-    public EquipmentInfoResp updateEquipment(Long id, EquipmentInfoReq equipmentInfoReq) {
+    public EquipmentInfoResp updateEquipment(Long id, EquipmentInfoReq req) {
         Equipment equipmentFromDB = getEquipmentFromDB(id);
-        Equipment equipmentForUpdate = objectMapper.convertValue(equipmentInfoReq, Equipment.class);
+        Equipment equipmentForUpdate = objectMapper.convertValue(req, Equipment.class);
 
         equipmentFromDB.setName(equipmentForUpdate.getName() == null ? equipmentFromDB.getName() : equipmentForUpdate.getName());
         equipmentFromDB.setTypeEquipment(equipmentForUpdate.getTypeEquipment() == null ? equipmentFromDB.getTypeEquipment() : equipmentForUpdate.getTypeEquipment());
