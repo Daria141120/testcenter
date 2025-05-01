@@ -44,15 +44,16 @@ public class ExamServiceImpl implements ExamService {
 
 
     @Override
-    public ExamInfoResp addExam(ExamInfoReq examInfoReq) {
-        examRepository.findFirsByName(examInfoReq.getName()).ifPresent(
+    public ExamInfoResp addExam(ExamInfoReq req) {
+        examRepository.findFirsByName(req.getName()).ifPresent(
                 exam -> { throw new CommonBackendException("Exam already exist", HttpStatus.CONFLICT);
                 });
-        if (laboratoryService.getLaboratoryFromDB(examInfoReq.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
+
+        if (!checkLabActive(req.getLaboratory().getId())) {
             throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
         }
 
-        Exam exam = objectMapper.convertValue(examInfoReq, Exam.class);
+        Exam exam = objectMapper.convertValue(req, Exam.class);
         exam.setStatus(ExamStatus.CREATED);
 
         Exam examSaved = examRepository.save(exam);
@@ -61,13 +62,13 @@ public class ExamServiceImpl implements ExamService {
 
 
     @Override
-    public ExamInfoResp updateExam(Long id, ExamInfoReq examInfoReq) {
-        if (laboratoryService.getLaboratoryFromDB(examInfoReq.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
+    public ExamInfoResp updateExam(Long id, ExamInfoReq req) {
+        if (!checkLabActive(req.getLaboratory().getId())) {
             throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
         }
 
         Exam examFromDB = getExamFromDB(id);
-        Exam examForUpdate = objectMapper.convertValue(examInfoReq, Exam.class);
+        Exam examForUpdate = objectMapper.convertValue(req, Exam.class);
 
         examFromDB.setName(examForUpdate.getName() == null ? examFromDB.getName() : examForUpdate.getName());
         examFromDB.setLaboratory(examForUpdate.getLaboratory() == null ? examFromDB.getLaboratory() : examForUpdate.getLaboratory());
@@ -93,6 +94,9 @@ public class ExamServiceImpl implements ExamService {
                 .collect(Collectors.toList());
     }
 
+    private boolean checkLabActive(Long id){
+        return laboratoryService.getLaboratoryFromDB(id).getStatus() != LaboratoryStatus.LIQUIDATED;
+    }
 
 
 }
