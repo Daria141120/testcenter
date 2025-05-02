@@ -102,7 +102,6 @@ public class OrderItemServiceImpl implements OrderItemService {
         } else {
             orderItemList = orderItemRepository.findAll();
         }
-
         return orderItemMapper.toOrderItemInfoRespList(orderItemList);
     }
 
