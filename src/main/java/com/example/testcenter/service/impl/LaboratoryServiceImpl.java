@@ -16,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,88 +34,103 @@ public class LaboratoryServiceImpl implements LaboratoryService {
 
     @Override
     public Laboratory getLaboratoryFromDB(Long id){
-        Optional<Laboratory> laboratoryFromDB = laboratoryRepository.findById(id);
+        Optional<Laboratory> labFromDB = laboratoryRepository.findById(id);
         final String errMsg = String.format("laboratory with id : %s not found", id);
-        return laboratoryFromDB.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
+        return labFromDB.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
 
     @Override
     public LaboratoryInfoResp getLaboratory(Long id) {
-        Laboratory laboratoryFromDB = getLaboratoryFromDB(id);
-        return objectMapper.convertValue(laboratoryFromDB, LaboratoryInfoResp.class);
+        Laboratory labFromDB = getLaboratoryFromDB(id);
+        return objectMapper.convertValue(labFromDB, LaboratoryInfoResp.class);
     }
 
     @Override
-    public LaboratoryInfoResp addLaboratory(LaboratoryInfoReq laboratoryInfoReq) {
-        laboratoryRepository.findFirstByName(laboratoryInfoReq.getName()).ifPresent(
+    public LaboratoryInfoResp addLaboratory(LaboratoryInfoReq req) {
+        laboratoryRepository.findFirstByName(req.getName()).ifPresent(
                 lab -> {throw new CommonBackendException("Laboratory already exist", HttpStatus.CONFLICT);
                 });
 
-        Laboratory laboratory = objectMapper.convertValue(laboratoryInfoReq, Laboratory.class);
-        laboratory.setStatus(LaboratoryStatus.CREATED);
+        Laboratory lab = objectMapper.convertValue(req, Laboratory.class);
+        lab.setStatus(LaboratoryStatus.CREATED);
 
-        Laboratory laboratorySaved = laboratoryRepository.save(laboratory);
-        return objectMapper.convertValue(laboratorySaved, LaboratoryInfoResp.class);
+        Laboratory labSaved = laboratoryRepository.save(lab);
+        return objectMapper.convertValue(labSaved, LaboratoryInfoResp.class);
     }
 
 
     @Override
-    public LaboratoryInfoResp updateLaboratory(Long id, LaboratoryInfoReq laboratoryInfoReq) {
-        Laboratory laboratoryFromDB = getLaboratoryFromDB(id);
-        Laboratory laboratoryForUpdate = objectMapper.convertValue(laboratoryInfoReq, Laboratory.class);
+    public LaboratoryInfoResp updateLaboratory(Long id, LaboratoryInfoReq req) {
+        Laboratory labFromDB = getLaboratoryFromDB(id);
+        Laboratory labForUpdate = objectMapper.convertValue(req, Laboratory.class);
 
-        if (laboratoryForUpdate.getName() != null) {
-            laboratoryFromDB.setName(laboratoryForUpdate.getName());
-        }
+        labFromDB.setName(labForUpdate.getName() == null ? labFromDB.getName() : labForUpdate.getName());
+        labFromDB.setDescription(labForUpdate.getDescription() == null ? labFromDB.getDescription() : labForUpdate.getDescription());
 
-        if (laboratoryForUpdate.getDescription() != null) {
-            laboratoryFromDB.setDescription(laboratoryForUpdate.getDescription());
-        }
-
-        laboratoryFromDB.setStatus(LaboratoryStatus.UPDATED);
-        laboratoryFromDB = laboratoryRepository.save(laboratoryFromDB);
-        return objectMapper.convertValue(laboratoryFromDB, LaboratoryInfoResp.class);
+        labFromDB.setStatus(LaboratoryStatus.UPDATED);
+        labFromDB = laboratoryRepository.save(labFromDB);
+        return objectMapper.convertValue(labFromDB, LaboratoryInfoResp.class);
     }
 
 
     @Override
     public void deleteLaboratory(Long id) {
-        Laboratory laboratoryFromDB = getLaboratoryFromDB(id);
-
-        laboratoryFromDB.setStatus(LaboratoryStatus.LIQUIDATED);
-        laboratoryRepository.save(laboratoryFromDB);
+        Laboratory labFromDB = getLaboratoryFromDB(id);
+        labFromDB.setStatus(LaboratoryStatus.LIQUIDATED);
+        laboratoryRepository.save(labFromDB);
     }
 
 
     @Override
-    public List<LaboratoryInfoResp> getAllLaboratory() {
-        return laboratoryRepository.findAll().stream()
-                .map(lab -> objectMapper.convertValue(lab, LaboratoryInfoResp.class))
-                .collect(Collectors.toList());
+    public List<LaboratoryInfoResp> getAllLaboratory(String status) {
+        List<LaboratoryInfoResp> labRespList;
+        if (StringUtils.hasText(status)){
+
+            List<String> listStatus = getAllLabStatus().stream().map(Enum::name).collect(Collectors.toList());
+            if (!listStatus.contains(status)) {
+                throw new CommonBackendException("Error in the status, there is no such status.", HttpStatus.BAD_REQUEST);
+            } else {
+                LaboratoryStatus labStatus = LaboratoryStatus.valueOf(status);
+                labRespList = laboratoryRepository.findAllByStatus(labStatus).stream()
+                        .map(lab -> objectMapper.convertValue(lab, LaboratoryInfoResp.class))
+                        .collect(Collectors.toList());
+            }
+
+        }else {
+            labRespList = laboratoryRepository.findAll().stream()
+                    .map(lab -> objectMapper.convertValue(lab, LaboratoryInfoResp.class))
+                    .collect(Collectors.toList());
+        }
+        return labRespList;
     }
 
     @Override
     public List<EmployeeInfoResp> getLaboratoryEmployees(Long id) {
-        Laboratory laboratory = getLaboratoryFromDB(id);
-        LaboratoryInfoResp laboratoryInfoResp = objectMapper.convertValue(laboratory, LaboratoryInfoResp.class);
+        Laboratory lab = getLaboratoryFromDB(id);
+        LaboratoryInfoResp labResp = objectMapper.convertValue(lab, LaboratoryInfoResp.class);
 
-        List <Employee> employeeList = laboratory.getEmployeeList();
-        List <EmployeeInfoResp> infoRespList = employeeList.stream()
+        List <Employee> employeeList = lab.getEmployeeList();
+        List <EmployeeInfoResp> respList = employeeList.stream()
                 .map(employee -> objectMapper.convertValue(employee, EmployeeInfoResp.class))
                 .collect(Collectors.toList());
 
-        infoRespList.forEach(employeeInfoResp -> employeeInfoResp.setLaboratory(laboratoryInfoResp));
-        return infoRespList;
+        respList.forEach(employeeInfoResp -> employeeInfoResp.setLaboratory(labResp));
+        return respList;
     }
 
     @Override
-    public void updateLabListEmployee(Laboratory laboratory){
-        laboratoryRepository.save(laboratory);
+    public void updateLabListEmployee(Laboratory lab){
+        laboratoryRepository.save(lab);
     }
 
     @Override
     public List<TaskInfoResp> getAllTasks(Long id, String status) {
         return taskService.getAllTasksByLaboratory(id, status);
+    }
+
+    @Override
+    public List<LaboratoryStatus> getAllLabStatus(){
+        return Arrays.stream(LaboratoryStatus.values()).collect(Collectors.toList());
     }
 
 

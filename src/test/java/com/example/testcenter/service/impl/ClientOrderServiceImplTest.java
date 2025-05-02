@@ -65,7 +65,6 @@ public class ClientOrderServiceImplTest {
         order.setClient(client);
 
         when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
-
         ClientOrder orderFromDB = orderService.getClientOrderFromDB(order.getId());
         assertEquals(order.getClient(), orderFromDB.getClient());
     }
@@ -81,7 +80,6 @@ public class ClientOrderServiceImplTest {
         order.setId(1L);
 
         when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
-
         ClientOrderInfoResp orderInfoResp = orderService.getClientOrder(order.getId());
         assertEquals(order.getId(), orderInfoResp.getId());
     }
@@ -106,7 +104,6 @@ public class ClientOrderServiceImplTest {
 
         when(orderRepository.save(any(ClientOrder.class))).thenReturn(order);
         //doNothing().when(emailSenderService).sendEmail(isA(String.class),isA(String.class),isA(String.class));
-
         ClientOrderInfoResp orderInfoResp = orderService.addClientOrder(req);
         assertEquals(order.getId(),orderInfoResp.getId());
         assertEquals(order.getClient(),client);
@@ -131,7 +128,6 @@ public class ClientOrderServiceImplTest {
         when(clientService.getClientFromDB(clientResp.getId())).thenReturn(client);
         when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
         when(orderRepository.save(any(ClientOrder.class))).thenReturn(order);
-
         ClientOrderInfoResp orderUpdatedResp = orderService.updateClientOrder(order.getId(), req);
         assertEquals(req.getClient().getEmail(), orderUpdatedResp.getClient().getEmail());
     }
@@ -149,7 +145,6 @@ public class ClientOrderServiceImplTest {
         orderOld.setClient(clientOld);
 
         when(orderRepository.findById(orderOld.getId())).thenReturn(Optional.of(orderOld));
-
         ClientOrderInfoResp orderUpdatedResp = orderService.updateClientOrder(orderOld.getId(), emptyReq);
         assertEquals(clientOld.getEmail(), orderUpdatedResp.getClient().getEmail());
     }
@@ -162,7 +157,6 @@ public class ClientOrderServiceImplTest {
 
         when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
         when(orderRepository.save(any(ClientOrder.class))).thenReturn(order);
-
         ClientOrderInfoResp orderResp = orderService.updateClientOrderStatus(1L, status);
         assertEquals(OrderStatus.valueOf(status), orderResp.getStatus());
     }
@@ -179,7 +173,6 @@ public class ClientOrderServiceImplTest {
 
         when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
         when(orderRepository.save(any(ClientOrder.class))).thenReturn(order);
-
         ClientOrderInfoResp orderResp = orderService.updateClientOrderStatus(1L, status);
         assertEquals(OrderStatus.valueOf(status), orderResp.getStatus());
     }
@@ -200,7 +193,6 @@ public class ClientOrderServiceImplTest {
 
         List<ClientOrder> orderList = List.of(order1, order2);
         when(orderRepository.findAll()).thenReturn(orderList);
-
         List<ClientOrderInfoResp> respList = orderService.getAllClientOrder("");
         assertEquals(orderList.size(), respList.size());
     }
@@ -219,7 +211,6 @@ public class ClientOrderServiceImplTest {
 
         when(orderRepository.findAllByStatus(any(OrderStatus.class))).thenReturn(orderList);
         List<ClientOrderInfoResp> respList = orderService.getAllClientOrder(status);
-
         assertEquals(orderList.size(), respList.size());
         respList.forEach(orderResp -> assertEquals(orderStatus, orderResp.getStatus()));
     }
@@ -239,7 +230,6 @@ public class ClientOrderServiceImplTest {
 
         when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
         List<OrderItemInfoResp> respOrderItemList = orderService.getAllItemsOfOrder(order.getId());
-
         assertEquals(order.getOrderItemList().size(), respOrderItemList.size());
     }
 
@@ -253,7 +243,6 @@ public class ClientOrderServiceImplTest {
         order.setOrderNumber(number);
 
         when(orderRepository.findByOrderNumber(number)).thenReturn(Optional.of(order));
-
         String resultStatus = orderService.getStatusByNumber(number);
         assertEquals(status, resultStatus);
     }

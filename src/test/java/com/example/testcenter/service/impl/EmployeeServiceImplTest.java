@@ -185,7 +185,6 @@ public class EmployeeServiceImplTest {
 
         when(employeeRepository.findById(any(Long.class))).thenReturn(Optional.of(employeeFromDB));
         employeeService.deleteEmployee(employeeFromDB.getId());
-
         verify(employeeRepository,times(1)).save(any(Employee.class));
         assertEquals(EmployeeStatus.DISMISSED, employeeFromDB.getStatus());
     }
@@ -197,8 +196,8 @@ public class EmployeeServiceImplTest {
         Employee employee2 = new Employee();
         employee1.setId(1L);
         employee2.setId(2L);
-
         List<Employee> employeeList = List.of(employee1, employee2);
+
         when(employeeRepository.findAll()).thenReturn(employeeList);
         List<EmployeeInfoResp> respList = employeeService.getAllEmployee("");
         assertEquals(employeeList.size(), respList.size());

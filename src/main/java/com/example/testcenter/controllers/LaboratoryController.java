@@ -49,9 +49,9 @@ public class LaboratoryController {
 
 
     @GetMapping("/all")
-    @Operation(summary = "Получить все лаборатории")
-    public List<LaboratoryInfoResp> getAllLaboratory (){
-        return laboratoryService.getAllLaboratory();
+    @Operation(summary = "Получить все лаборатории(по  статусу опционально)")
+    public List<LaboratoryInfoResp> getAllLaboratory (@RequestParam (required = false) String status){
+        return laboratoryService.getAllLaboratory(status);
     }
 
     @GetMapping("/{id}/employees")

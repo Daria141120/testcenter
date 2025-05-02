@@ -2,6 +2,7 @@ package com.example.testcenter.model.dto.response;
 
 
 import com.example.testcenter.model.dto.request.LaboratoryInfoReq;
+import com.example.testcenter.model.enums.LaboratoryStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -21,5 +22,8 @@ public class LaboratoryInfoResp extends LaboratoryInfoReq {
 
     @Schema(description = "id")
     private Long id;
+
+    @Schema(description = "Статус лаборатории")
+    private LaboratoryStatus status;
 
 }
