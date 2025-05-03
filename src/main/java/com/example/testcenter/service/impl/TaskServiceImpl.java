@@ -38,14 +38,13 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final ObjectMapper objectMapper;
     private final TaskMapper taskMapper;
-    private final EmployeeMapper employeeMapper;
     private final ClientOrderService clientOrderService;
-
 
     @PersistenceContext
     private final EntityManager entityManager;
 
-    private Task getTaskFromDB(Long id) {
+    @Override
+    public Task getTaskFromDB(Long id) {
         Optional<Task> taskFromDB = taskRepository.findById(id);
         final String errMsg = String.format("task with id : %s not found", id);
         return taskFromDB.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
@@ -116,7 +115,7 @@ public class TaskServiceImpl implements TaskService {
 
         if (taskStatus == TaskStatus.CLOSED){
             Long orderId = taskSaved.getOrderItem().getClientOrder().getId();
-            if (  getCountNotCompletedTaskByOrderId(orderId) == 0 ){
+            if (getCountNotCompletedTaskByOrderId(orderId) == 0) {
                 clientOrderService.updateClientOrderStatus(orderId, OrderStatus.COMPLETED.name());
             }
         }
@@ -184,8 +183,10 @@ public class TaskServiceImpl implements TaskService {
 
 
     private boolean checkStatusExist(String status){
-        List<String> list = getAllTaskStatus().stream().map(Enum::name).collect(Collectors.toList());
-        return list.contains(status);
+        return getAllTaskStatus().stream()
+                .map(Enum::name)
+                .collect(Collectors.toList())
+                .contains(status);
     }
 
 

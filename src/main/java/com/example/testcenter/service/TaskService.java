@@ -1,5 +1,6 @@
 package com.example.testcenter.service;
 
+import com.example.testcenter.model.db.entity.Task;
 import com.example.testcenter.model.dto.request.TaskInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.TaskInfoResp;
@@ -8,6 +9,8 @@ import com.example.testcenter.model.enums.TaskStatus;
 import java.util.List;
 
 public interface TaskService {
+    Task getTaskFromDB(Long id);
+
     TaskInfoResp getTask(Long id);
 
     List<TaskInfoResp> getAllTasks();

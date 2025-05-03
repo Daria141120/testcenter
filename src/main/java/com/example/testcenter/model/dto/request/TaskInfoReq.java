@@ -24,7 +24,6 @@ public class TaskInfoReq {
     @Schema(description = "Элемент заказа")
     private OrderItemInfoResp orderItem;
 
-   // @NotNull(message = "Сотрудник должен быть заполнен")
     @Schema(description = "Сотрудник")
     private EmployeeInfoResp employee;
 
