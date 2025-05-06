@@ -5,6 +5,5 @@ public enum Post {
     LAB_ASSISTANT,
     LAB_TECH,
     CHIEF,
-    ENGINEER,
-    ADMINISTRATOR;
+    ENGINEER
     }

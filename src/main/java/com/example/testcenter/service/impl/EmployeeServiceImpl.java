@@ -52,20 +52,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public EmployeeInfoResp addEmployee(EmployeeInfoReq employeeInfoReq) {
-        employeeRepository.findFirstByEmailAndLastName(employeeInfoReq.getEmail(), employeeInfoReq.getLastName()).ifPresent(
+    public EmployeeInfoResp addEmployee(EmployeeInfoReq req) {
+        employeeRepository.findFirstByEmailAndLastName(req.getEmail(), req.getLastName()).ifPresent(
                 employee -> {
                     throw new CommonBackendException("Employee already exist", HttpStatus.CONFLICT);
                 });
-        if (laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
+
+        if (laboratoryService.getLaboratoryFromDB(req.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
             throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
         }
 
-        Employee employee = objectMapper.convertValue(employeeInfoReq, Employee.class);
+        Employee employee = objectMapper.convertValue(req, Employee.class);
         employee.setStatus(EmployeeStatus.ACTIVE);
         Employee employeeSaved = employeeRepository.save(employee);
 
-        Laboratory laboratoryFromDB = laboratoryService.getLaboratoryFromDB(employeeInfoReq.getLaboratory().getId());
+        Laboratory laboratoryFromDB = laboratoryService.getLaboratoryFromDB(req.getLaboratory().getId());
         laboratoryFromDB.getEmployeeList().add(employeeSaved);
         laboratoryService.updateLabListEmployee(laboratoryFromDB);
 
@@ -74,10 +75,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public EmployeeInfoResp updateEmployee(Long id, EmployeeInfoReq employeeInfoReq) {
+    public EmployeeInfoResp updateEmployee(Long id, EmployeeInfoReq req) {
 
         Employee employeeFromDB = getEmployeeFromDB(id);
-        Employee employeeForUpdate = objectMapper.convertValue(employeeInfoReq, Employee.class);
+        Employee employeeForUpdate = objectMapper.convertValue(req, Employee.class);
 
         employeeFromDB.setEmail( employeeForUpdate.getEmail() == null ? employeeFromDB.getEmail() : employeeForUpdate.getEmail());
         employeeFromDB.setFirstName( employeeForUpdate.getFirstName() == null ? employeeFromDB.getFirstName() : employeeForUpdate.getFirstName());
