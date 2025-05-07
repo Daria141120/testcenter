@@ -1,81 +1,89 @@
 package com.example.testcenter.controllers;
 
 
+import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.request.UserInfoReq;
 import com.example.testcenter.model.dto.response.TaskInfoResp;
 import com.example.testcenter.model.dto.response.UserInfoResp;
 import com.example.testcenter.model.enums.Role;
 import com.example.testcenter.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Set;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @Tag(name = "Пользователи")
+@SecurityScheme(type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT", name = "Authorization")
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping("/{id}")
-    @Operation(summary = "Получить пользователя по id")
+    @Operation(summary = "Получить пользователя по id", security = @SecurityRequirement(name = AUTHORIZATION))
     public UserInfoResp getUser(@PathVariable ("id") Long id){
         return userService.getUser(id);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     // @PreAuthorize("#req.username == authentication.principal.username || hasAuthority('ROLE_ADMIN') ")
     @PutMapping("/{id}")
-    @Operation(summary = "Обновить даннные пользователя по id")
+    @Operation(summary = "Обновить даннные пользователя по id", security = @SecurityRequirement(name = AUTHORIZATION))
     public UserInfoResp updateUser(@PathVariable ("id") Long id, @RequestBody UserInfoReq req){
        return userService.updateUser(id, req);
     }
 
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @Operation(summary = "Удалить пользователя по id")
+    @Operation(summary = "Удалить пользователя по id", security = @SecurityRequirement(name = AUTHORIZATION))
     public void deleteUser(@PathVariable ("id") Long id){
         userService.deleteUser(id);
     }
 
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/all")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @Operation(summary = "Получить всех пользователей")
+    @Operation(summary = "Получить всех пользователей", security = @SecurityRequirement(name = AUTHORIZATION))
     public List<UserInfoResp> getAllUser(){
         return userService.getAllUser();
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}/addRole")
-    @Operation(summary = "Добавить роль пользователю")
+    @Operation(summary = "Добавить роль пользователю", security = @SecurityRequirement(name = AUTHORIZATION))
     public UserInfoResp addRoleToUser(@PathVariable ("id") Long id, @RequestBody String role){
         return userService.addRoleToUser(id, role);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/{id}/roles")
-    @Operation(summary = "Получить все роли пользователя")
+    @Operation(summary = "Получить все роли пользователя", security = @SecurityRequirement(name = AUTHORIZATION))
     public Set<Role> getAllUserRoles(@PathVariable ("id") Long id){
         return userService.getAllUserRoles(id);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PutMapping("/{id}")
-    @Operation(summary = "Удалить роль у пользователя")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping("/{id}/deleteRole")
+    @Operation(summary = "Удалить роль у пользователя", security = @SecurityRequirement(name = AUTHORIZATION))
     public void deleteUserRole(@PathVariable ("id") Long id, @RequestBody String role){
         userService.deleteUserRole(id, role);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/roles")
-    @Operation(summary = "Получить все возможные роли")
+    @Operation(summary = "Получить все возможные роли", security = @SecurityRequirement(name = AUTHORIZATION))
     public Set<Role> getExistRoles(){
         return userService.getExistRoles();
     }
@@ -83,10 +91,26 @@ public class UserController {
 
     //@PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping("/{id}/myTasks")
-    @Operation(summary = "Получить все задачи пользователя")
+    @Operation(summary = "Получить все задачи пользователя", security = @SecurityRequirement(name = AUTHORIZATION))
     public List<TaskInfoResp> getUserTasks(@PathVariable ("id") Long id){
         return userService.getUserTasks(id);
     }
+
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping("/{id}/addEmployee")
+    @Operation(summary = "Заполнить и создать сотрудника", security = @SecurityRequirement(name = AUTHORIZATION))
+    public UserInfoResp addEmployee(@PathVariable ("id") Long id, @RequestBody EmployeeInfoReq employeeReq){
+        return userService.addEmployee(id, employeeReq);
+    }
+
+
+    //?
+    @GetMapping("/info")
+    public String userData(Principal principal) {
+        return principal.getName();
+    }
+
+
 
 
 }

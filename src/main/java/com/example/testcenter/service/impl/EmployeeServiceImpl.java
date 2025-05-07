@@ -38,7 +38,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeMapper employeeMapper;
     private final TaskService taskService;
 
-    public Employee getEmployeeFromDB (Long id){
+    @Override
+    public Employee getEmployeeFromDB(Long id){
         Optional <Employee> employeeFromDB = employeeRepository.findById(id);
         final String errMsg = String.format("employee with id : %s not found", id);
         return employeeFromDB.orElseThrow(() ->  new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));

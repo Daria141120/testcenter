@@ -1,5 +1,6 @@
 package com.example.testcenter.service;
 
+import com.example.testcenter.model.db.entity.Employee;
 import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
@@ -9,6 +10,8 @@ import com.example.testcenter.model.enums.EmployeeStatus;
 import java.util.List;
 
 public interface EmployeeService {
+
+    Employee getEmployeeFromDB(Long id);
 
     EmployeeInfoResp getEmployee(Long id);
 

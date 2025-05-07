@@ -1,5 +1,7 @@
 package com.example.testcenter.service;
 
+import com.example.testcenter.model.db.entity.User;
+import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.request.UserInfoReq;
 import com.example.testcenter.model.dto.response.TaskInfoResp;
 import com.example.testcenter.model.dto.response.UserInfoResp;
@@ -19,6 +21,8 @@ public interface UserService {
 
     List<UserInfoResp> getAllUser();
 
+    User getUserByUsername(String username);
+
     Set<Role> getExistRoles();
 
     void deleteUserRole(Long id, String role);
@@ -28,4 +32,6 @@ public interface UserService {
     UserInfoResp addRoleToUser(Long id, String role);
 
     List<TaskInfoResp> getUserTasks(Long id);
+
+    UserInfoResp addEmployee(Long id, EmployeeInfoReq employeeReq);
 }

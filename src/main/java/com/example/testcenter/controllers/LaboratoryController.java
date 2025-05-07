@@ -7,6 +7,9 @@ import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
 import com.example.testcenter.model.dto.response.TaskInfoResp;
 import com.example.testcenter.service.LaboratoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +17,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @RestController
 @RequestMapping("/laboratories")
 @RequiredArgsConstructor
 @Tag(name = "Лаборатории")
+@SecurityScheme(type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT", name = "Authorization")
+@SecurityRequirement(name = AUTHORIZATION)
 public class LaboratoryController {
 
     private final LaboratoryService laboratoryService;

@@ -4,7 +4,9 @@ import com.example.testcenter.exception.CommonBackendException;
 import com.example.testcenter.model.db.entity.Employee;
 import com.example.testcenter.model.db.entity.User;
 import com.example.testcenter.model.db.repository.UserRepository;
+import com.example.testcenter.model.dto.request.EmployeeInfoReq;
 import com.example.testcenter.model.dto.request.UserInfoReq;
+import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.TaskInfoResp;
 import com.example.testcenter.model.dto.response.UserInfoResp;
 import com.example.testcenter.model.enums.Role;
@@ -120,14 +122,26 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userFromDB);
     }
 
-
-
-
-
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new CommonBackendException(String.format("User with username %s not found", username), HttpStatus.BAD_REQUEST)
+        );
+    }
 
     @Override
     public Set<Role> getExistRoles() {
         return Arrays.stream(Role.values()).collect(Collectors.toSet());
+    }
+
+    @Override
+    public UserInfoResp addEmployee(Long id, EmployeeInfoReq employeeReq) {
+        EmployeeInfoResp employeeResp = employeeService.addEmployee(employeeReq);
+        Employee employeeCreated = employeeService.getEmployeeFromDB(employeeResp.getId());
+        User userFromDB = getUserFromDB(id);
+        userFromDB.setEmployee(employeeCreated);
+        userFromDB = userRepository.save(userFromDB);
+        return new UserInfoResp(userFromDB.getId(), userFromDB.getUsername());
     }
 
     @Override
@@ -136,6 +150,8 @@ public class UserServiceImpl implements UserService {
         Employee employee = userFromDB.getEmployee();
         return  employeeService.getAllAssignedTasks(employee.getId());
     }
+
+
 
 
 }

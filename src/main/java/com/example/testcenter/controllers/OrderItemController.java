@@ -4,6 +4,9 @@ import com.example.testcenter.model.dto.request.OrderItemInfoReq;
 import com.example.testcenter.model.dto.response.OrderItemInfoResp;
 import com.example.testcenter.service.OrderItemService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @RestController
 @RequestMapping("/orderItems")
 @RequiredArgsConstructor
 @Tag(name = "Элементы заявок")
+@SecurityScheme(type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT", name = "Authorization")
+@SecurityRequirement(name = AUTHORIZATION)
 public class OrderItemController {
 
     private final OrderItemService orderItemService;

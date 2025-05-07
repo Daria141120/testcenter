@@ -6,6 +6,9 @@ import com.example.testcenter.model.dto.response.TaskInfoResp;
 import com.example.testcenter.model.enums.TaskStatus;
 import com.example.testcenter.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +16,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @RestController
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
 @Tag(name = "Задачи")
+@SecurityScheme(type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT", name = "Authorization")
+@SecurityRequirement(name = AUTHORIZATION)
 public class TaskController {
 
     private final TaskService taskService;
