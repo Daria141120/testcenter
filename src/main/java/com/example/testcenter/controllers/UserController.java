@@ -53,7 +53,7 @@ public class UserController {
         userService.deleteUser(id);
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/all")
     @Operation(summary = "Получить всех пользователей", security = @SecurityRequirement(name = AUTHORIZATION))
     public List<UserInfoResp> getAllUser(){
@@ -104,10 +104,9 @@ public class UserController {
     }
 
 
-    //?
-    @GetMapping("/info")
-    public String userData(Principal principal) {
-        return principal.getName();
+    @GetMapping("/myTasksInfo")
+    public List<TaskInfoResp> userData(Principal principal) {
+        return userService.userTaskInfo(principal);
     }
 
 

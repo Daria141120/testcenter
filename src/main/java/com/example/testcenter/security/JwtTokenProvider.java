@@ -114,16 +114,4 @@ public class JwtTokenProvider {
         );
     }
 
-
-
-
-    // ? нужно ли
-    public List<String> getRoles(String token){
-        return getAllClaimsFromToken(token)
-                .get("roles", List.class);
-    }
-
-
-
-
 }

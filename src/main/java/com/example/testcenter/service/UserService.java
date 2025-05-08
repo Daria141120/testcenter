@@ -7,6 +7,7 @@ import com.example.testcenter.model.dto.response.TaskInfoResp;
 import com.example.testcenter.model.dto.response.UserInfoResp;
 import com.example.testcenter.model.enums.Role;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 
@@ -34,4 +35,6 @@ public interface UserService {
     List<TaskInfoResp> getUserTasks(Long id);
 
     UserInfoResp addEmployee(Long id, EmployeeInfoReq employeeReq);
+
+    List<TaskInfoResp> userTaskInfo(Principal principal);
 }

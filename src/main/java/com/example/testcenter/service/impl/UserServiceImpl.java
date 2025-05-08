@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -152,6 +153,15 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
+    @Override
+    public List<TaskInfoResp> userTaskInfo(Principal principal) {
+        List<TaskInfoResp> taskRespList = List.of();
+        String username = principal.getName();
+        User user = getUserByUsername(username);
+        Employee employee = user.getEmployee();
+        if (employee != null) {
+            taskRespList = employeeService.getAllAssignedTasks(employee.getId());
+        }
+        return taskRespList;
+    }
 }

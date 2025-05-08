@@ -23,7 +23,7 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
-    //private final UserService userService;
+
 
     @PostMapping("/login")
     public JwtResponse login(@RequestBody @Valid JwtRequest loginRequest){
