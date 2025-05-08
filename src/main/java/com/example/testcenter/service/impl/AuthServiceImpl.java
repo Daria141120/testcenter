@@ -1,10 +1,12 @@
 package com.example.testcenter.service.impl;
 
 import com.example.testcenter.exception.CommonBackendException;
+import com.example.testcenter.model.db.entity.User;
 import com.example.testcenter.model.dto.auth.JwtRequest;
 import com.example.testcenter.model.dto.auth.JwtResponse;
 import com.example.testcenter.model.dto.request.UserInfoReq;
 import com.example.testcenter.model.dto.response.UserInfoResp;
+import com.example.testcenter.security.JwtTokenProvider;
 import com.example.testcenter.service.AuthService;
 import com.example.testcenter.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +24,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
-
-
-
+    private final JwtTokenProvider tokenProvider;
 
 
     @Override
@@ -36,10 +36,14 @@ public class AuthServiceImpl implements AuthService {
             throw new CommonBackendException("некорректный логин и пароль", HttpStatus.UNAUTHORIZED);
         }
 
+        User user = userService.getUserByUsername(loginRequest.getUsername());
+        String accessToken = tokenProvider.createAccessToken(user.getUsername(), user.getRoles());
+        String refreshToken = tokenProvider.createRefreshToken(user.getUsername());
 
-
-
-        return null;
+        jwtResponse.setUsername(user.getUsername());
+        jwtResponse.setAccessToken(accessToken);
+        jwtResponse.setRefreshToken(refreshToken);
+        return jwtResponse;
     }
 
     @Override
@@ -48,4 +52,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
+    @Override
+    public JwtResponse refresh(String refreshToken) {
+        return tokenProvider.refreshUserTokens(refreshToken);
+    }
 }

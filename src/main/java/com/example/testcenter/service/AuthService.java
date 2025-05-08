@@ -11,4 +11,6 @@ public interface AuthService {
     JwtResponse login(JwtRequest loginRequest);
 
     UserInfoResp createNewUser(UserInfoReq req);
+
+    JwtResponse refresh(String refreshToken);
 }

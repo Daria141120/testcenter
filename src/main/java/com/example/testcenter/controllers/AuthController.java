@@ -26,7 +26,7 @@ public class AuthController {
     //private final UserService userService;
 
     @PostMapping("/login")
-    public JwtResponse login(@RequestBody @Valid final JwtRequest loginRequest){
+    public JwtResponse login(@RequestBody @Valid JwtRequest loginRequest){
         return authService.login(loginRequest);
     }
 
@@ -35,7 +35,10 @@ public class AuthController {
         return authService.createNewUser(req);
     }
 
-
+    @PostMapping("/refresh")
+    public JwtResponse refresh(@RequestBody String refreshToken) {
+        return authService.refresh(refreshToken);
+    }
 
 
 }
