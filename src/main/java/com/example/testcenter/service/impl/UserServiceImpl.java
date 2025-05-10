@@ -33,17 +33,17 @@ public class UserServiceImpl implements UserService {
     private final EmployeeService employeeService;
     //private final ObjectMapper objectMapper;   refact after seq
 
-    @Value("${admin.adminName}")
-    private String adminName;
+    @Value("${admin.login}")
+    private String adminLogin;
 
     @Value("${admin.password}")
     private String password;
 
     @Override
     public void createAdmin() {
-        if (!userRepository.findByUsername(adminName).isPresent()) {
+        if (!userRepository.findByUsername(adminLogin).isPresent()) {
             User admin = new User();
-            admin.setUsername(adminName);
+            admin.setUsername(adminLogin);
             admin.setPassword(passwordEncoder.encode(password));
             Set<Role> roles = new HashSet<>();
             roles.add(Role.ROLE_ADMIN);
@@ -51,17 +51,17 @@ public class UserServiceImpl implements UserService {
             userRepository.save(admin);
             log.info("Admin with name - {} created", admin.getUsername());
         } else {
-            log.info("Admin with name - {} already exists", adminName);
+            log.info("Admin with name - {} already exists", adminLogin);
         }
     }
 
 
     @Override
     public UserInfoResp createNewUser(UserInfoReq req) {
-        if (!req.getPassword().equals(req.getPasswordConfirmation())){
+        if (!req.getPassword().equals(req.getPasswordConfirmation())) {
             throw new CommonBackendException("Password and password confirmation do not match", HttpStatus.BAD_REQUEST);
         }
-        if (userRepository.findByUsername(req.getUsername()).isPresent()){
+        if (userRepository.findByUsername(req.getUsername()).isPresent()) {
             throw new CommonBackendException("User already exists", HttpStatus.CONFLICT);
         }
 
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
         roles.add(Role.ROLE_USER);
         user.setRoles(roles);
         user = userRepository.save(user);
-        log.info("User with username - {} created",user.getUsername());
+        log.info("User with username - {} created", user.getUsername());
         return new UserInfoResp(user.getId(), user.getUsername());
     }
 
@@ -85,12 +85,11 @@ public class UserServiceImpl implements UserService {
         return resp;
     }
 
-    private User getUserFromDB(Long id){
+    private User getUserFromDB(Long id) {
         Optional<User> user = userRepository.findById(id);
         final String errMsg = String.format("user with id : %s not found", id);
         return user.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
-
 
 
     @Override
@@ -175,7 +174,7 @@ public class UserServiceImpl implements UserService {
     public List<TaskInfoResp> getUserTasks(Long id) {
         User userFromDB = getUserFromDB(id);
         Employee employee = userFromDB.getEmployee();
-        return  employeeService.getAllAssignedTasks(employee.getId());
+        return employeeService.getAllAssignedTasks(employee.getId());
     }
 
 

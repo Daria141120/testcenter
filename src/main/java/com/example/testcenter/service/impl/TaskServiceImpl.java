@@ -25,6 +25,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -108,7 +109,6 @@ public class TaskServiceImpl implements TaskService {
         }
 
         TaskStatus taskStatus = TaskStatus.valueOf(status);
-
         Task taskFromDB = getTaskFromDB(id);
         taskFromDB.setStatus(taskStatus);
         Task taskSaved = taskRepository.save(taskFromDB);

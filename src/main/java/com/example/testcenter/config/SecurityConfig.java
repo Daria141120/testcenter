@@ -21,8 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +30,6 @@ import java.util.Arrays;
 @RequiredArgsConstructor (onConstructor_ ={@Lazy})
 public class SecurityConfig {
 
-    private final ApplicationContext applicationContext;  //?
     private final JwtTokenProvider tokenProvider;
 
     @Bean
@@ -61,7 +60,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors()
                 .and()
-             //   .httpBasic().disable()
+                .httpBasic().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -76,14 +75,16 @@ public class SecurityConfig {
                 }))
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                      //  .requestMatchers(new AntPathRequestMatcher("/**swagger**/**")).permitAll()
-                        //  .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
                         .requestMatchers(SWAGGER_ENDPOINT).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name())).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/orders/checkStatus")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/users/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/orders/**")).hasRole("MANAGER")
+                        .requestMatchers(new AntPathRequestMatcher("/users/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/clients/**")).hasAnyRole("MANAGER", "ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/orders/**")).hasAnyRole("MANAGER", "ADMIN")
+                        .requestMatchers(new RegexRequestMatcher("/employees/[A-Za-z0-9]+", "GET")).hasAnyRole("CHIEF", "ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/employees/**")).hasAnyRole("ADMIN")
+
                         .anyRequest().authenticated()
                         .and())
                         .addFilterBefore(new JwtTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);

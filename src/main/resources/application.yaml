@@ -47,5 +47,5 @@ security:
     accessTime: 604800000
     refreshTime: 604800000
 admin:
-  adminName: admin_1
+  login: admin_1
   password: MTIzNDU2Nzg5

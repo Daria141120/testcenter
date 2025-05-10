@@ -7,7 +7,6 @@ import com.example.testcenter.model.enums.Role;
 import com.example.testcenter.security.props.JwtProperties;
 import com.example.testcenter.service.UserService;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
