@@ -46,7 +46,7 @@ public class UserController {
        return userService.updateUser(id, req);
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить пользователя по id", security = @SecurityRequirement(name = AUTHORIZATION))
     public void deleteUser(@PathVariable ("id") Long id){

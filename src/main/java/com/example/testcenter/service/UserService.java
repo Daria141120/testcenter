@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserService {
+    void createAdmin();
+
     UserInfoResp createNewUser(UserInfoReq req);
 
     UserInfoResp getUser(Long id);

@@ -46,3 +46,6 @@ security:
     secret: Y29ya2V3b3RqY2lnbGdodWlqZ29rZnBsO1s0bmRmZ2hqa2w7UVNER0hOV1FFUlQ=
     accessTime: 604800000
     refreshTime: 604800000
+admin:
+  adminName: admin_1
+  password: MTIzNDU2Nzg5

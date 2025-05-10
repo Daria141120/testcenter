@@ -14,6 +14,7 @@ import com.example.testcenter.service.EmployeeService;
 import com.example.testcenter.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,28 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final EmployeeService employeeService;
     //private final ObjectMapper objectMapper;   refact after seq
+
+    @Value("${admin.adminName}")
+    private String adminName;
+
+    @Value("${admin.password}")
+    private String password;
+
+    @Override
+    public void createAdmin() {
+        if (!userRepository.findByUsername(adminName).isPresent()) {
+            User admin = new User();
+            admin.setUsername(adminName);
+            admin.setPassword(passwordEncoder.encode(password));
+            Set<Role> roles = new HashSet<>();
+            roles.add(Role.ROLE_ADMIN);
+            admin.setRoles(roles);
+            userRepository.save(admin);
+            log.info("Admin with name - {} created", admin.getUsername());
+        } else {
+            log.info("Admin with name - {} already exists", adminName);
+        }
+    }
 
 
     @Override
@@ -68,6 +91,8 @@ public class UserServiceImpl implements UserService {
         return user.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
 
+
+
     @Override
     public UserInfoResp updateUser(Long id, UserInfoReq req) {
         User userForUpdate = new User();
@@ -83,6 +108,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
+        getUserFromDB(id);
         userRepository.deleteById(id);
     }
 

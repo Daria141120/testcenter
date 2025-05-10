@@ -173,7 +173,6 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     }
 
     private void sendMailToClient(String toEmail, String subject, String text) {
-
         try {
             emailSenderService.sendEmail(toEmail, subject, text);
         } catch (MailException mailException) {
