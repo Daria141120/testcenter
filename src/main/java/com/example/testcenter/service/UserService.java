@@ -18,7 +18,7 @@ public interface UserService {
 
     UserInfoResp getUser(Long id);
 
-    UserInfoResp updateUser(Long id, UserInfoReq req);
+    UserInfoResp updateUser(Long id, UserInfoReq req, Principal principal);
 
     void deleteUser(Long id);
 
@@ -36,7 +36,7 @@ public interface UserService {
 
     List<TaskInfoResp> getUserTasks(Long id);
 
-    UserInfoResp addEmployee(Long id, EmployeeInfoReq employeeReq);
+    UserInfoResp addEmployee(Long id, EmployeeInfoReq employeeReq, Principal principal);
 
     List<TaskInfoResp> userTaskInfo(Principal principal);
 }

@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmployeeService employeeService;
-    //private final ObjectMapper objectMapper;   refact after seq
 
     @Value("${admin.login}")
     private String adminLogin;
@@ -93,12 +92,15 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserInfoResp updateUser(Long id, UserInfoReq req) {
+    public UserInfoResp updateUser(Long id, UserInfoReq req, Principal principal) {
+        User userFromDB = getUserFromDB(id);
+        if (!userFromDB.getUsername().equals(principal.getName())){
+            throw new CommonBackendException("Access denied!", HttpStatus.FORBIDDEN);
+        }
+
         User userForUpdate = new User();
         userForUpdate.setUsername(req.getUsername());
         userForUpdate.setPassword(passwordEncoder.encode(req.getPassword()));
-
-        User userFromDB = getUserFromDB(id);
         userFromDB.setUsername(req.getUsername() == null ? userFromDB.getUsername() : userForUpdate.getUsername());
         userFromDB.setPassword(req.getPassword() == null ? userFromDB.getPassword() : userForUpdate.getPassword());
 
@@ -161,10 +163,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoResp addEmployee(Long id, EmployeeInfoReq employeeReq) {
+    public UserInfoResp addEmployee(Long id, EmployeeInfoReq employeeReq, Principal principal) {
+        User userFromDB = getUserFromDB(id);
+
+        if (!userFromDB.getUsername().equals(principal.getName())){
+            throw new CommonBackendException("Access denied!", HttpStatus.FORBIDDEN);
+        }
+
         EmployeeInfoResp employeeResp = employeeService.addEmployee(employeeReq);
         Employee employeeCreated = employeeService.getEmployeeFromDB(employeeResp.getId());
-        User userFromDB = getUserFromDB(id);
         userFromDB.setEmployee(employeeCreated);
         userFromDB = userRepository.save(userFromDB);
         return new UserInfoResp(userFromDB.getId(), userFromDB.getUsername());

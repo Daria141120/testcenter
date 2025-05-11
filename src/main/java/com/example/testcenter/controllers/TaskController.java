@@ -34,12 +34,12 @@ public class TaskController {
         return taskService.getTask(id);
     }
 
-    // для внутреннего использования в OrderItem
-    @PostMapping
-    @Operation(summary = "Добавить задачу")
-    public TaskInfoResp addTask(@RequestBody @Valid TaskInfoReq taskInfoReq){
-        return taskService.addTask(taskInfoReq);
-    }
+    // для внутреннего использования в OrderItem, задача создается автоматически в orderItemService.addOrderItem
+//    @PostMapping
+//    @Operation(summary = "Добавить задачу")
+//    public TaskInfoResp addTask(@RequestBody @Valid TaskInfoReq taskInfoReq){
+//        return taskService.addTask(taskInfoReq);
+//    }
 
     @PutMapping("/{id}/changeEmployee")
     @Operation(summary = "Назначить/сменить сотрудника для задачи")
