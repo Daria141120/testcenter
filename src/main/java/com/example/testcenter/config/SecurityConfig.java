@@ -4,7 +4,6 @@ import com.example.testcenter.security.JwtTokenFilter;
 import com.example.testcenter.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -48,14 +47,14 @@ public class SecurityConfig {
 
     @Bean
     @SneakyThrows
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {  //проверяет успешна аутентификация или нет
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
         return configuration.getAuthenticationManager();
     }
 
 
     @Bean
     @SneakyThrows
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {  // настройка
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
         httpSecurity
                 .csrf().disable()
                 .cors()
