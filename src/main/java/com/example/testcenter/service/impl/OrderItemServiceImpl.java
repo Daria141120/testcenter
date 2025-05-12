@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -35,9 +34,9 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public OrderItem getOrderItemFromDB(Long id) {
-          Optional<OrderItem> orderItemFromDB = orderItemRepository.findById(id);
-          final String errMsg = String.format("orderItem with id : %s not found", id);
-          return orderItemFromDB.orElseThrow(()-> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
+        Optional<OrderItem> orderItemFromDB = orderItemRepository.findById(id);
+        final String errMsg = String.format("orderItem with id : %s not found", id);
+        return orderItemFromDB.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -48,20 +47,18 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public OrderItemInfoResp addOrderItem(OrderItemInfoReq req) {
-        if (req.getClientOrder().getStatus() == OrderStatus.COMPLETED){
+        if (req.getClientOrder().getStatus() == OrderStatus.COMPLETED) {
             throw new CommonBackendException("Order has already been COMPLETED", HttpStatus.CONFLICT);
         }
 
         OrderItem orderItem = objectMapper.convertValue(req, OrderItem.class);
         OrderItem orderItemSaved = orderItemRepository.save(orderItem);
 
-        // синхронизация (правда работает и без нее)
         ClientOrder clientOrder = clientOrderService.getClientOrderFromDB(orderItemSaved.getClientOrder().getId());
         List<OrderItem> orderItemList = clientOrder.getOrderItemList();
         orderItemList.add(orderItemSaved);
         clientOrderService.updateOrderItemList(clientOrder);
 
-        //  создать сразу запись в задачах
         OrderItemInfoResp orderItemResp = orderItemMapper.toOrderItemInfoResp(orderItemSaved);
         TaskInfoReq taskInfoReq = new TaskInfoReq();
         taskInfoReq.setOrderItem(orderItemResp);
@@ -72,7 +69,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public OrderItemInfoResp updateOrderItem(Long id, OrderItemInfoReq req) {
-        if (req.getClientOrder().getStatus() == OrderStatus.COMPLETED){
+        if (req.getClientOrder().getStatus() == OrderStatus.COMPLETED) {
             throw new CommonBackendException("Order has already been COMPLETED", HttpStatus.CONFLICT);
         }
         OrderItem orderItemFromDB = getOrderItemFromDB(id);
@@ -84,7 +81,6 @@ public class OrderItemServiceImpl implements OrderItemService {
 
         OrderItem orderItemSaved = orderItemRepository.save(orderItemFromDB);
 
-        // синхронизация (правда работает и без нее)
         ClientOrder clientOrder = clientOrderService.getClientOrderFromDB(orderItemSaved.getClientOrder().getId());
         List<OrderItem> orderItemList = clientOrder.getOrderItemList();
         orderItemList.add(orderItemSaved);
@@ -97,14 +93,14 @@ public class OrderItemServiceImpl implements OrderItemService {
     public List<OrderItemInfoResp> getAllOrderItem(Long idOrder) {
         List<OrderItem> orderItemList;
 
-        if (idOrder != null){
+        if (idOrder != null) {
             orderItemList = orderItemRepository.findAllByClientOrder_Id(idOrder);
         } else {
             orderItemList = orderItemRepository.findAll();
         }
+
         return orderItemMapper.toOrderItemInfoRespList(orderItemList);
     }
-
 
 
 }

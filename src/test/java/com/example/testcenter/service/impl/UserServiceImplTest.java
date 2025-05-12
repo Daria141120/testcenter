@@ -35,13 +35,13 @@ public class UserServiceImplTest {
     private UserServiceImpl userService;
 
     @Mock
-    private  UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Spy
     public PasswordEncoder passwordEncoder;
 
     @Mock
-    private  EmployeeService employeeService;
+    private EmployeeService employeeService;
 
 
     @Test

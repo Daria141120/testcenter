@@ -19,7 +19,6 @@ import javax.validation.constraints.NotNull;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-//@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderItemInfoReq {
 

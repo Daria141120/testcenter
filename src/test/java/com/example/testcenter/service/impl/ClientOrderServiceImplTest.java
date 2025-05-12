@@ -70,7 +70,7 @@ public class ClientOrderServiceImplTest {
     }
 
     @Test(expected = CommonBackendException.class)
-    public void getClientOrderFromDBNotFound(){
+    public void getClientOrderFromDBNotFound() {
         orderService.getClientOrderFromDB(1L);
     }
 
@@ -103,10 +103,9 @@ public class ClientOrderServiceImplTest {
         order.setClient(client);
 
         when(orderRepository.save(any(ClientOrder.class))).thenReturn(order);
-        //doNothing().when(emailSenderService).sendEmail(isA(String.class),isA(String.class),isA(String.class));
         ClientOrderInfoResp orderInfoResp = orderService.addClientOrder(req);
-        assertEquals(order.getId(),orderInfoResp.getId());
-        assertEquals(order.getClient(),client);
+        assertEquals(order.getId(), orderInfoResp.getId());
+        assertEquals(order.getClient(), client);
     }
 
     @Test
@@ -252,7 +251,7 @@ public class ClientOrderServiceImplTest {
         ClientOrder order = new ClientOrder();
         order.setId(1L);
         orderService.updateOrderItemList(order);
-        verify(orderRepository,times(1)).save(any(ClientOrder.class));
+        verify(orderRepository, times(1)).save(any(ClientOrder.class));
     }
 
 

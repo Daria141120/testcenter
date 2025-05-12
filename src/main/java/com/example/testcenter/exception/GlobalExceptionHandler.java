@@ -68,8 +68,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorMessage> handleNotUniqueValue(DataIntegrityViolationException ex) {
-      //  String message = ex.getMessage();
-      //  log.error("повторяющееся значение ключа нарушает ограничение уникальности : {}", message);
         return ResponseEntity.badRequest().body(new ErrorMessage(("ОШИБКА: повторяющееся значение ключа нарушает ограничение уникальности таблицы")));
     }
 

@@ -47,16 +47,14 @@ public class LaboratoryController {
         return laboratoryService.updateLaboratory(id, laboratoryInfoReq);
     }
 
-
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить лабораторию")
     public void deleteLaboratory(@PathVariable ("id") Long id){
         laboratoryService.deleteLaboratory(id);
     }
 
-
     @GetMapping("/all")
-    @Operation(summary = "Получить все лаборатории(по  статусу опционально)")
+    @Operation(summary = "Получить все лаборатории(по статусу - опционально)")
     public List<LaboratoryInfoResp> getAllLaboratory (@RequestParam (required = false) String status){
         return laboratoryService.getAllLaboratory(status);
     }
@@ -66,7 +64,6 @@ public class LaboratoryController {
     public List<EmployeeInfoResp> getLaboratoryEmployees (@PathVariable ("id") Long id){
         return laboratoryService.getLaboratoryEmployees(id);
     }
-
 
     @GetMapping("/{id}/allTasks")
     @Operation(summary = "Получить задачи лаборатории (по статусу - опционально)")

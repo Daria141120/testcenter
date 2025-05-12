@@ -2,7 +2,6 @@ package com.example.testcenter.service.impl;
 
 
 import com.example.testcenter.exception.CommonBackendException;
-import com.example.testcenter.mapper.EmployeeMapper;
 import com.example.testcenter.mapper.TaskMapper;
 import com.example.testcenter.model.db.entity.Employee;
 import com.example.testcenter.model.db.entity.Task;
@@ -25,7 +24,6 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -65,16 +63,13 @@ public class TaskServiceImpl implements TaskService {
         if (req.getEmployee() == null) {
             task.setStatus(TaskStatus.CREATED);
         } else {
-            if (req.getEmployee().getStatus() == EmployeeStatus.DISMISSED){
+            if (req.getEmployee().getStatus() == EmployeeStatus.DISMISSED) {
                 throw new CommonBackendException("Employee DISMISSED", HttpStatus.BAD_REQUEST);
             }
             task.setStatus(TaskStatus.ASSIGNED);
         }
 
-        //Task taskSaved = taskRepository.save(merge);   // detached entity - если переприсоединять order-item то работает
-        // пытается пересохранять в таблицу order-item, не получилось это отключить
-
-        Task mergedTask = entityManager.merge(task);  // обновление связанных сущностей делает
+        Task mergedTask = entityManager.merge(task);
         entityManager.persist(mergedTask);
 
         return taskMapper.toTaskInfoResp(mergedTask);
@@ -83,20 +78,20 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskInfoResp changeTaskEmployee(Long id, EmployeeInfoResp employeeResp) {
-        if (employeeResp.getStatus() == EmployeeStatus.DISMISSED){
+        if (employeeResp.getStatus() == EmployeeStatus.DISMISSED) {
             throw new CommonBackendException("Employee DISMISSED", HttpStatus.BAD_REQUEST);
         }
 
         Task taskFromDB = getTaskFromDB(id);
 
-        if (taskFromDB.getStatus() == TaskStatus.CLOSED){
+        if (taskFromDB.getStatus() == TaskStatus.CLOSED) {
             throw new CommonBackendException("Task was CLOSED, you can't change an employee", HttpStatus.BAD_REQUEST);
         }
 
         Employee employee = objectMapper.convertValue(employeeResp, Employee.class);
         taskFromDB.setEmployee(employee);
         taskFromDB.setStatus(TaskStatus.ASSIGNED);
-        Task taskSaved =  taskRepository.save(taskFromDB);
+        Task taskSaved = taskRepository.save(taskFromDB);
 
         return taskMapper.toTaskInfoResp(taskSaved);
     }
@@ -104,7 +99,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskInfoResp changeTaskStatus(Long id, String status) {
 
-        if (!checkStatusExist(status)){
+        if (!checkStatusExist(status)) {
             throw new CommonBackendException("Error in the status, there is no such status.", HttpStatus.BAD_REQUEST);
         }
 
@@ -113,7 +108,7 @@ public class TaskServiceImpl implements TaskService {
         taskFromDB.setStatus(taskStatus);
         Task taskSaved = taskRepository.save(taskFromDB);
 
-        if (taskStatus == TaskStatus.CLOSED){
+        if (taskStatus == TaskStatus.CLOSED) {
             Long orderId = taskSaved.getOrderItem().getClientOrder().getId();
             if (getCountNotCompletedTaskByOrderId(orderId) == 0) {
                 clientOrderService.updateClientOrderStatus(orderId, OrderStatus.COMPLETED.name());
@@ -144,12 +139,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskInfoResp> getAllNotCompletedTask(Long idOrder) {
         List<Task> taskList;
-        if (idOrder != null){
+        if (idOrder != null) {
             taskList = taskRepository.findAllNotCompletedTask(idOrder);
         } else {
             taskList = taskRepository.findAllByStatusNot(TaskStatus.CLOSED);
         }
-       // System.out.println("количество невыполненных задач"+getCountNotCompletedTaskByOrderId(idOrder));
         return taskMapper.toTaskInfoRespList(taskList);
     }
 
@@ -168,8 +162,8 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskInfoResp> getAllTasksByLaboratory(Long id, String status) {
         List<Task> taskList;
 
-        if (StringUtils.hasText(status)){
-            if (!checkStatusExist(status)){
+        if (StringUtils.hasText(status)) {
+            if (!checkStatusExist(status)) {
                 throw new CommonBackendException("Error in the status, there is no such status.", HttpStatus.BAD_REQUEST);
             }
             TaskStatus taskStatus = TaskStatus.valueOf(status);
@@ -182,7 +176,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
 
-    private boolean checkStatusExist(String status){
+    private boolean checkStatusExist(String status) {
         return getAllTaskStatus().stream()
                 .map(Enum::name)
                 .collect(Collectors.toList())

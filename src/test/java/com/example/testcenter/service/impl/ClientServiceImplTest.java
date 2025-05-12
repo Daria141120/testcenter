@@ -2,11 +2,9 @@ package com.example.testcenter.service.impl;
 
 import com.example.testcenter.exception.CommonBackendException;
 import com.example.testcenter.model.db.entity.Client;
-import com.example.testcenter.model.db.entity.ClientOrder;
 import com.example.testcenter.model.db.repository.ClientRepository;
 import com.example.testcenter.model.dto.request.ClientInfoReq;
 import com.example.testcenter.model.dto.response.ClientInfoResp;
-import com.example.testcenter.model.dto.response.ClientOrderInfoResp;
 import com.example.testcenter.model.enums.ClientStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -30,10 +28,10 @@ public class ClientServiceImplTest {
     private ClientServiceImpl clientService;
 
     @Spy
-    private  ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     @Mock
-    private  ClientRepository clientRepository;
+    private ClientRepository clientRepository;
 
     @Test
     public void getClientFromDB() {
@@ -144,7 +142,7 @@ public class ClientServiceImplTest {
         when(clientRepository.findById(clientFromDB.getId())).thenReturn(Optional.of(clientFromDB));
         clientService.deleteClient(clientFromDB.getId());
 
-        verify(clientRepository,times(1)).save(any(Client.class));
+        verify(clientRepository, times(1)).save(any(Client.class));
         assertEquals(ClientStatus.DELETED, clientFromDB.getStatus());
     }
 

@@ -35,7 +35,7 @@ public class JwtTokenFilter extends GenericFilterBean {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-            else log.debug("Время жизни токена вышло");
+            else log.debug("Срок действия токена истек");
         } catch (Exception e){
             log.error("----------Ошибка в блоке фильтра:  {}", e.getMessage());
         }

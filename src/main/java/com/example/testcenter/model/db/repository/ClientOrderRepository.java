@@ -18,10 +18,4 @@ public interface ClientOrderRepository extends JpaRepository<ClientOrder, Long> 
     Optional<ClientOrder> findByOrderNumber(String orderNumber);
 
 
-//    @Query("select count(c) from ClientOrder c where c.createdAt between :dateStart and :dateCurrent")
-//    long countByYear (@Param("dateStart") LocalDateTime dateStart, @Param("dateCurrent") LocalDateTime dateCurrent);
-
-
-
-
 }

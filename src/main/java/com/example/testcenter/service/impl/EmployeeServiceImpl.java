@@ -39,10 +39,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final TaskService taskService;
 
     @Override
-    public Employee getEmployeeFromDB(Long id){
-        Optional <Employee> employeeFromDB = employeeRepository.findById(id);
+    public Employee getEmployeeFromDB(Long id) {
+        Optional<Employee> employeeFromDB = employeeRepository.findById(id);
         final String errMsg = String.format("employee with id : %s not found", id);
-        return employeeFromDB.orElseThrow(() ->  new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
+        return employeeFromDB.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -51,7 +51,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeMapper.toEmployeeInfoResp(employeeFromDB);
     }
 
-
     @Override
     public EmployeeInfoResp addEmployee(EmployeeInfoReq req) {
         employeeRepository.findFirstByEmailAndLastName(req.getEmail(), req.getLastName()).ifPresent(
@@ -59,7 +58,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     throw new CommonBackendException("Employee already exist", HttpStatus.CONFLICT);
                 });
 
-        if (laboratoryService.getLaboratoryFromDB(req.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
+        if (laboratoryService.getLaboratoryFromDB(req.getLaboratory().getId()).getStatus() == LaboratoryStatus.LIQUIDATED) {
             throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
         }
 
@@ -81,11 +80,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employeeFromDB = getEmployeeFromDB(id);
         Employee employeeForUpdate = objectMapper.convertValue(req, Employee.class);
 
-        employeeFromDB.setEmail( employeeForUpdate.getEmail() == null ? employeeFromDB.getEmail() : employeeForUpdate.getEmail());
-        employeeFromDB.setFirstName( employeeForUpdate.getFirstName() == null ? employeeFromDB.getFirstName() : employeeForUpdate.getFirstName());
-        employeeFromDB.setLastName( employeeForUpdate.getLastName() == null ? employeeFromDB.getLastName() : employeeForUpdate.getLastName());
-        employeeFromDB.setMiddleName( employeeForUpdate.getMiddleName() == null ? employeeFromDB.getMiddleName() : employeeForUpdate.getMiddleName());
-        employeeFromDB.setPost( employeeForUpdate.getPost() == null ? employeeFromDB.getPost() : employeeForUpdate.getPost());
+        employeeFromDB.setEmail(employeeForUpdate.getEmail() == null ? employeeFromDB.getEmail() : employeeForUpdate.getEmail());
+        employeeFromDB.setFirstName(employeeForUpdate.getFirstName() == null ? employeeFromDB.getFirstName() : employeeForUpdate.getFirstName());
+        employeeFromDB.setLastName(employeeForUpdate.getLastName() == null ? employeeFromDB.getLastName() : employeeForUpdate.getLastName());
+        employeeFromDB.setMiddleName(employeeForUpdate.getMiddleName() == null ? employeeFromDB.getMiddleName() : employeeForUpdate.getMiddleName());
+        employeeFromDB.setPost(employeeForUpdate.getPost() == null ? employeeFromDB.getPost() : employeeForUpdate.getPost());
 
         Employee employeeSaved = employeeRepository.save(employeeFromDB);
 
@@ -121,10 +120,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-
     @Override
     public EmployeeInfoResp changeLab(Long id, LaboratoryInfoResp lab) {
-        if (laboratoryService.getLaboratoryFromDB(lab.getId()).getStatus() == LaboratoryStatus.LIQUIDATED ){
+        if (laboratoryService.getLaboratoryFromDB(lab.getId()).getStatus() == LaboratoryStatus.LIQUIDATED) {
             throw new CommonBackendException("Laboratory LIQUIDATED ", HttpStatus.CONFLICT);
         }
 

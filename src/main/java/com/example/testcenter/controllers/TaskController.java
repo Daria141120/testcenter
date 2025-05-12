@@ -34,12 +34,14 @@ public class TaskController {
         return taskService.getTask(id);
     }
 
-    // для внутреннего использования в OrderItem, задача создается автоматически в orderItemService.addOrderItem
+
+// для внутреннего использования в OrderItem, задача создается автоматически в orderItemService.addOrderItem
 //    @PostMapping
 //    @Operation(summary = "Добавить задачу")
 //    public TaskInfoResp addTask(@RequestBody @Valid TaskInfoReq taskInfoReq){
 //        return taskService.addTask(taskInfoReq);
 //    }
+
 
     @PutMapping("/{id}/changeEmployee")
     @Operation(summary = "Назначить/сменить сотрудника для задачи")
@@ -47,13 +49,15 @@ public class TaskController {
         return taskService.changeTaskEmployee(id, employeeResp);
     }
 
+
     @PutMapping("/{id}/changeStatus")
     @Operation(summary = "Сменить статус задачи")
     public TaskInfoResp changeTaskStatus(@PathVariable("id") Long id, @RequestBody String status){
         return taskService.changeTaskStatus(id, status);
     }
 
-    @GetMapping("/allStatus")       // используется для выбора статуса при обновлении информации о состоянии задачи
+
+    @GetMapping("/allStatus")
     @Operation(summary = "Получить все возможные статусы задач")
     public List<TaskStatus> getAllTaskStatus(){
         return taskService.getAllTaskStatus();
@@ -66,14 +70,16 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
+
     @GetMapping("/allNewTask")
     @Operation(summary = "Получить все задачи у которых не назначен сотрудник")
     public List<TaskInfoResp> getAllNewTasks(){
         return taskService.getAllNewTasks();
     }
 
+
     @GetMapping("/allNotCompletedTask")
-    @Operation(summary = "Получить все незавершенные задачи по номеру заявки(опционально)")
+    @Operation(summary = "Получить все незавершенные задачи (по номеру заявки - опционально)")
     public List<TaskInfoResp> getAllNotCompletedTask(@RequestParam (required = false) Long idOrder){
         return taskService.getAllNotCompletedTask(idOrder);
     }

@@ -27,9 +27,6 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
-//    @Transient
-//    private String passwordConfirmation;
-
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "users_roles")

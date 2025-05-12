@@ -2,9 +2,6 @@ package com.example.testcenter.model.dto.response;
 
 
 import com.example.testcenter.model.dto.request.OrderItemInfoReq;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,8 +14,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-//@JsonInclude(JsonInclude.Include.NON_NULL)
-
 public class OrderItemInfoResp extends OrderItemInfoReq {
 
     @Schema(description = "id")

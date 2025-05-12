@@ -38,19 +38,19 @@ public class EmployeeServiceImplTest {
     private EmployeeServiceImpl employeeService;
 
     @Spy
-    private  ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     @Spy
-    private  EmployeeMapper employeeMapper = new EmployeeMapperImpl();
+    private EmployeeMapper employeeMapper = new EmployeeMapperImpl();
 
     @Mock
-    private  LaboratoryService laboratoryService;
+    private LaboratoryService laboratoryService;
 
     @Mock
-    private  EmployeeRepository employeeRepository;
+    private EmployeeRepository employeeRepository;
 
     @Mock
-    private  TaskService taskService;
+    private TaskService taskService;
 
     @Test
     public void getEmployeeFromDB() {
@@ -185,7 +185,7 @@ public class EmployeeServiceImplTest {
 
         when(employeeRepository.findById(any(Long.class))).thenReturn(Optional.of(employeeFromDB));
         employeeService.deleteEmployee(employeeFromDB.getId());
-        verify(employeeRepository,times(1)).save(any(Employee.class));
+        verify(employeeRepository, times(1)).save(any(Employee.class));
         assertEquals(EmployeeStatus.DISMISSED, employeeFromDB.getStatus());
     }
 
@@ -239,7 +239,7 @@ public class EmployeeServiceImplTest {
         lab.setStatus(LaboratoryStatus.LIQUIDATED);
 
         when(laboratoryService.getLaboratoryFromDB(any(Long.class))).thenReturn(lab);
-        employeeService.changeLab(lab.getId(),labResp);
+        employeeService.changeLab(lab.getId(), labResp);
     }
 
     @Test
@@ -267,7 +267,7 @@ public class EmployeeServiceImplTest {
         when(employeeRepository.findById(any(Long.class))).thenReturn(Optional.of(employeeFromDBOlb));
         when(laboratoryService.getLaboratoryFromDB(any(Long.class))).thenReturn(labNew);
         when(employeeRepository.save(any(Employee.class))).thenReturn(employeeFromDBNew);
-        EmployeeInfoResp employeeResp = employeeService.changeLab(labNew.getId(),labRespNew);
+        EmployeeInfoResp employeeResp = employeeService.changeLab(labNew.getId(), labRespNew);
         assertEquals(employeeResp.getLaboratory().getId(), labRespNew.getId());
     }
 

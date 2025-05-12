@@ -25,7 +25,6 @@ public class UserInfoReq {
 
 
     @Schema(description = "User password confirmation")
-   // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotEmpty(message = "Подтвердите пароль")
     private String passwordConfirmation;
 

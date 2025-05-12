@@ -12,6 +12,4 @@ public interface LaboratoryRepository extends JpaRepository<Laboratory, Long> {
 
     List<Laboratory> findAllByStatus(LaboratoryStatus status);
 
-
-
 }

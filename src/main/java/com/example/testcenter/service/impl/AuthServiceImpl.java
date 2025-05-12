@@ -30,10 +30,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponse login(JwtRequest loginRequest) {
         JwtResponse jwtResponse = new JwtResponse();
-        try{
+        try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        }catch (BadCredentialsException e){
-            throw new CommonBackendException("некорректный логин и пароль", HttpStatus.UNAUTHORIZED);
+        } catch (BadCredentialsException e) {
+            throw new CommonBackendException("некорректный логин и/или пароль", HttpStatus.UNAUTHORIZED);
         }
         User user = userService.getUserByUsername(loginRequest.getUsername());
         String accessToken = tokenProvider.createAccessToken(user.getUsername(), user.getRoles());

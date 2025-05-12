@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createAdmin() {
-        if ( !userRepository.findByUsername(adminLogin).isPresent()) {
+        if (!userRepository.findByUsername(adminLogin).isPresent()) {
             User admin = new User();
             admin.setUsername(adminLogin);
             admin.setPassword(passwordEncoder.encode(password));
@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfoResp updateUser(Long id, String password, Principal principal) {
         User userFromDB = getUserFromDB(id);
-        if (!userFromDB.getUsername().equals(principal.getName())){
+        if (!userFromDB.getUsername().equals(principal.getName())) {
             throw new CommonBackendException("Access denied!", HttpStatus.FORBIDDEN);
         }
 
@@ -164,7 +164,7 @@ public class UserServiceImpl implements UserService {
     public UserInfoResp addEmployee(Long id, EmployeeInfoReq employeeReq, Principal principal) {
         User userFromDB = getUserFromDB(id);
 
-        if (!userFromDB.getUsername().equals(principal.getName())){
+        if (!userFromDB.getUsername().equals(principal.getName())) {
             throw new CommonBackendException("Access denied!", HttpStatus.FORBIDDEN);
         }
 

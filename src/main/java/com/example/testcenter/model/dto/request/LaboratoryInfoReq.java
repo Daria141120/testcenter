@@ -16,7 +16,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-//@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LaboratoryInfoReq {
 

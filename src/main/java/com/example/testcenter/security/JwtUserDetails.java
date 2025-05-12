@@ -1,15 +1,12 @@
 package com.example.testcenter.security;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
 import java.util.Collection;
-import java.util.List;
 
 
 @Getter
@@ -22,7 +19,6 @@ public class JwtUserDetails implements UserDetails {
     private final String username;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
-
 
 
     @Override

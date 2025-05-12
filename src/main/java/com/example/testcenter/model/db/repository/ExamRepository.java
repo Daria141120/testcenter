@@ -9,8 +9,4 @@ public interface ExamRepository extends JpaRepository <Exam, Long> {
 
     Optional<Exam> findFirsByName(String name);
 
-
-
-
-
 }

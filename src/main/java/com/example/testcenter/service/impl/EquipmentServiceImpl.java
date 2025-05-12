@@ -1,6 +1,5 @@
 package com.example.testcenter.service.impl;
 
-
 import com.example.testcenter.exception.CommonBackendException;
 import com.example.testcenter.model.db.entity.EquipExam2;
 import com.example.testcenter.model.db.entity.Equipment;
@@ -34,12 +33,11 @@ public class EquipmentServiceImpl implements EquipmentService {
     private final EquipExam2Service equipExam2Service;
 
     @Override
-    public Equipment getEquipmentFromDB(Long id){
+    public Equipment getEquipmentFromDB(Long id) {
         Optional<Equipment> equipmentFromDB = equipmentRepository.findById(id);
         final String errMsg = String.format("equipmentId with id : %s not found", id);
         return equipmentFromDB.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
-
 
     @Override
     public EquipmentInfoResp getEquipment(Long id) {
@@ -47,11 +45,11 @@ public class EquipmentServiceImpl implements EquipmentService {
         return objectMapper.convertValue(equipmentFromDB, EquipmentInfoResp.class);
     }
 
-
     @Override
     public EquipmentInfoResp addEquipment(EquipmentInfoReq req) {
         equipmentRepository.findFirstByName(req.getName()).ifPresent(
-                equip -> { throw new CommonBackendException("Equipment already exist", HttpStatus.CONFLICT);
+                equip -> {
+                    throw new CommonBackendException("Equipment already exist", HttpStatus.CONFLICT);
                 });
 
         Equipment equipment = objectMapper.convertValue(req, Equipment.class);
@@ -60,7 +58,6 @@ public class EquipmentServiceImpl implements EquipmentService {
         equipment = equipmentRepository.save(equipment);
         return objectMapper.convertValue(equipment, EquipmentInfoResp.class);
     }
-
 
     @Override
     public EquipmentInfoResp updateEquipment(Long id, EquipmentInfoReq req) {
@@ -92,8 +89,8 @@ public class EquipmentServiceImpl implements EquipmentService {
     public List<ExamInfoResp> getEquipmentExams(Long id) {
         Equipment equipment = getEquipmentFromDB(id);
 
-        List <EquipExam2> equipExamList = equipment.getEquipExam2List();
-        List <ExamInfoResp> examInfoRespList = equipExamList.stream()
+        List<EquipExam2> equipExamList = equipment.getEquipExam2List();
+        List<ExamInfoResp> examInfoRespList = equipExamList.stream()
                 .map(equipExam2 -> objectMapper.convertValue(equipExam2.getExam(), ExamInfoResp.class))
                 .collect(Collectors.toList());
 
@@ -112,9 +109,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 
         examsRespList.forEach(
                 examInfoResp -> {
-                  equipExamReq.setExam(examInfoResp);
-                  EquipExam2InfoResp resp =  equipExam2Service.addEquipExam(equipExamReq);
-                  respList.add(resp);
+                    equipExamReq.setExam(examInfoResp);
+                    EquipExam2InfoResp resp = equipExam2Service.addEquipExam(equipExamReq);
+                    respList.add(resp);
                 }
         );
         return respList;

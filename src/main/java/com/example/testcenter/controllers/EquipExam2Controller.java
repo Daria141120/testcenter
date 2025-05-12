@@ -26,13 +26,14 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @SecurityRequirement(name = AUTHORIZATION)
 public class EquipExam2Controller {
 
-     private final EquipExam2Service equipExam2Service;
+    private final EquipExam2Service equipExam2Service;
 
     @GetMapping("/{id}&{id2}")
     @Operation(summary = "Получить связь испытание-оборудование")
     public EquipExam2InfoResp getEquipExam(@PathVariable("id") Long id, @PathVariable("id2") Long id2) {
         return equipExam2Service.getEquipExam(id, id2);
     }
+
 
     @GetMapping("/all")
     @Operation(summary = "Получить все связи испытание-оборудование")
@@ -50,18 +51,16 @@ public class EquipExam2Controller {
 
     @PutMapping("/{id}&{id2}/changeStatus")
     @Operation(summary = "Изменить статус связи испытание-оборудование")
-    public EquipExam2InfoResp updateEquipExamStatus (@PathVariable("id") Long id, @PathVariable("id2") Long id2, @RequestBody String status){
+    public EquipExam2InfoResp updateEquipExamStatus(@PathVariable("id") Long id, @PathVariable("id2") Long id2, @RequestBody String status) {
         return equipExam2Service.updateEquipExamStatus(id, id2, status);
     }
 
 
-    @GetMapping("/allStatus")             // используется для выбора статуса при обновлении информации о состоянии связи оборудование-испытание
+    @GetMapping("/allStatus")
     @Operation(summary = "Получить все возможные статусы для связи оборудование-испытание")
-    public List<Availability> getAllEquipExamStatus(){
+    public List<Availability> getAllEquipExamStatus() {
         return equipExam2Service.getAllEquipExamStatus();
     }
-
-
 
 
 }

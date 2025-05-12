@@ -3,7 +3,6 @@ package com.example.testcenter.model.db.entity;
 
 import com.example.testcenter.model.enums.ClientStatus;
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 

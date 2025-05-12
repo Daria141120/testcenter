@@ -30,9 +30,9 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public Exam getExamFromDB(Long id) {
-        Optional<Exam>  examFromDB = examRepository.findById(id);
+        Optional<Exam> examFromDB = examRepository.findById(id);
         final String errMsg = String.format("examId with id : %s not found", id);
-        return examFromDB.orElseThrow(() ->  new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
+        return examFromDB.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
 
 
@@ -46,7 +46,8 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ExamInfoResp addExam(ExamInfoReq req) {
         examRepository.findFirsByName(req.getName()).ifPresent(
-                exam -> { throw new CommonBackendException("Exam already exist", HttpStatus.CONFLICT);
+                exam -> {
+                    throw new CommonBackendException("Exam already exist", HttpStatus.CONFLICT);
                 });
 
         if (!checkLabActive(req.getLaboratory().getId())) {
@@ -75,7 +76,6 @@ public class ExamServiceImpl implements ExamService {
 
         examFromDB.setStatus(ExamStatus.UPDATED);
         examFromDB = examRepository.save(examFromDB);
-
         return objectMapper.convertValue(examFromDB, ExamInfoResp.class);
     }
 
@@ -94,7 +94,7 @@ public class ExamServiceImpl implements ExamService {
                 .collect(Collectors.toList());
     }
 
-    private boolean checkLabActive(Long id){
+    private boolean checkLabActive(Long id) {
         return laboratoryService.getLaboratoryFromDB(id).getStatus() != LaboratoryStatus.LIQUIDATED;
     }
 

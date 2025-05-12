@@ -20,11 +20,10 @@ import javax.validation.constraints.NotNull;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-//@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmployeeInfoReq {
 
-    @NotEmpty(message = "Email должен быть заполнен") // лишнее?
+    @NotEmpty(message = "Email должен быть заполнен")
     @Email(message = "должен иметь формат адреса электронной почты")
     @Schema(description = "email")
     private String email;

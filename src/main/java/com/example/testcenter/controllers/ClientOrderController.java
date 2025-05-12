@@ -53,6 +53,7 @@ public class ClientOrderController {
         return clientOrderService.updateClientOrderStatus(id, status);
     }
 
+
     @GetMapping("/all")
     @Operation(summary = "Получить все заявки(по статусу - опционально)", security = @SecurityRequirement(name = AUTHORIZATION))
     public List<ClientOrderInfoResp> getAllClientOrder(@RequestParam (required = false) String status) {
@@ -61,11 +62,11 @@ public class ClientOrderController {
 
 
     @GetMapping("/allStatus")
-    // используется для выбора статуса при обновлении информации о состоянии заявки
     @Operation(summary = "Получить все возможные статусы заявок", security = @SecurityRequirement(name = AUTHORIZATION))
     public List<OrderStatus> getAllOrderStatus() {
         return clientOrderService.getAllOrderStatus();
     }
+
 
     @GetMapping("/{id}/orderItems")
     @Operation(summary = "Получить все элементы заявки", security = @SecurityRequirement(name = AUTHORIZATION))
@@ -73,9 +74,10 @@ public class ClientOrderController {
         return clientOrderService.getAllItemsOfOrder(id);
     }
 
+
     @GetMapping("/checkStatus")
     @Operation(summary = "Получить статус заявки по уникальному номеру")
-    public String getStatusByNumber(@RequestParam(required = true) String orderNumber) {
+    public String getStatusByNumber(@RequestParam String orderNumber) {
         return clientOrderService.getStatusByNumber(orderNumber);
     }
 

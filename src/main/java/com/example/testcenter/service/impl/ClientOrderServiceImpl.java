@@ -17,7 +17,6 @@ import com.example.testcenter.service.EmailSenderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,6 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     private final ClientOrderMapper clientOrderMapper;
     private final EmailSenderService emailSenderService;
 
-
     @Override
     public ClientOrder getClientOrderFromDB(Long id) {
         Optional<ClientOrder> clientOrderFromDB = clientOrderRepository.findById(id);
@@ -56,6 +54,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         ClientOrder clientOrderFromDB = getClientOrderFromDB(id);
         return objectMapper.convertValue(clientOrderFromDB, ClientOrderInfoResp.class);
     }
+
 
     @Override
     public ClientOrderInfoResp addClientOrder(ClientOrderInfoReq req) {
@@ -112,6 +111,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         return objectMapper.convertValue(clientOrderFromDB, ClientOrderInfoResp.class);
     }
 
+
     @Override
     public List<ClientOrderInfoResp> getAllClientOrder(String status) {
         List<ClientOrderInfoResp> respList;
@@ -139,6 +139,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         return orderItemMapper.toOrderItemInfoRespList(orderItemList);
     }
 
+
     @Override
     public void updateOrderItemList(ClientOrder clientOrder) {
         clientOrderRepository.save(clientOrder);
@@ -149,6 +150,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     public List<OrderStatus> getAllOrderStatus() {
         return Arrays.stream(OrderStatus.values()).collect(Collectors.toList());
     }
+
 
     @Override
     public String getStatusByNumber(String orderNumber) {
@@ -165,12 +167,14 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         return list.contains(status);
     }
 
+
     private String generateUniqueOrderNumber() {
         int currentYear = LocalDateTime.now().getYear();
         LocalDateTime firstDayYear = LocalDateTime.of(currentYear, 1, 1, 1, 0);
         long countOrdersByYear = clientOrderRepository.countByCreatedAtBetween(firstDayYear, LocalDateTime.now());
         return "K-" + currentYear + "-" + (countOrdersByYear + 1);
     }
+
 
     private void sendMailToClient(String toEmail, String subject, String text) {
         try {

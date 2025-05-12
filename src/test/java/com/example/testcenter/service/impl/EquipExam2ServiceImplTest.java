@@ -1,7 +1,6 @@
 package com.example.testcenter.service.impl;
 
 import com.example.testcenter.exception.CommonBackendException;
-import com.example.testcenter.mapper.EquipExamMapper;
 import com.example.testcenter.mapper.EquipExamMapperImpl;
 import com.example.testcenter.model.db.entity.EquipExam2;
 import com.example.testcenter.model.db.entity.EquipExam2Key;
@@ -40,11 +39,11 @@ public class EquipExam2ServiceImplTest {
     private ObjectMapper objectMapper;
 
     @Spy
-    private EquipExamMapperImpl equipExamMapper;// = new EquipExamMapperImpl();
+    private EquipExamMapperImpl equipExamMapper;
 
     @Test
     public void getEquipExamFromDB() {
-        EquipExam2Key key = new EquipExam2Key(1L,1L);
+        EquipExam2Key key = new EquipExam2Key(1L, 1L);
         EquipExam2 equipExam = new EquipExam2();
         equipExam.setId(key);
 
@@ -60,7 +59,7 @@ public class EquipExam2ServiceImplTest {
 
     @Test
     public void getEquipExam() {
-        EquipExam2Key key = new EquipExam2Key(1L,1L);
+        EquipExam2Key key = new EquipExam2Key(1L, 1L);
         EquipExam2 equipExam = new EquipExam2();
         equipExam.setId(key);
 
@@ -83,7 +82,7 @@ public class EquipExam2ServiceImplTest {
         equipment.setId(equipResp.getId());
 
         EquipExam2 equipExam = new EquipExam2();
-        equipExam.setId(new EquipExam2Key(equipResp.getId(),examResp.getId()));
+        equipExam.setId(new EquipExam2Key(equipResp.getId(), examResp.getId()));
         equipExam.setExam(exam);
         equipExam.setEquipment(equipment);
 

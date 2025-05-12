@@ -17,13 +17,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-//@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EquipExam2InfoResp extends EquipExam2InfoReq {
 
     @Schema(description = "id")
     private EquipExam2Key id;
-
 
     @Schema(description = "Доступность")
     private Availability availability;

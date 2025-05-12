@@ -33,7 +33,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     private final TaskService taskService;
 
     @Override
-    public Laboratory getLaboratoryFromDB(Long id){
+    public Laboratory getLaboratoryFromDB(Long id) {
         Optional<Laboratory> labFromDB = laboratoryRepository.findById(id);
         final String errMsg = String.format("laboratory with id : %s not found", id);
         return labFromDB.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
@@ -48,7 +48,8 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     @Override
     public LaboratoryInfoResp addLaboratory(LaboratoryInfoReq req) {
         laboratoryRepository.findFirstByName(req.getName()).ifPresent(
-                lab -> {throw new CommonBackendException("Laboratory already exist", HttpStatus.CONFLICT);
+                lab -> {
+                    throw new CommonBackendException("Laboratory already exist", HttpStatus.CONFLICT);
                 });
 
         Laboratory lab = objectMapper.convertValue(req, Laboratory.class);
@@ -57,7 +58,6 @@ public class LaboratoryServiceImpl implements LaboratoryService {
         Laboratory labSaved = laboratoryRepository.save(lab);
         return objectMapper.convertValue(labSaved, LaboratoryInfoResp.class);
     }
-
 
     @Override
     public LaboratoryInfoResp updateLaboratory(Long id, LaboratoryInfoReq req) {
@@ -72,7 +72,6 @@ public class LaboratoryServiceImpl implements LaboratoryService {
         return objectMapper.convertValue(labFromDB, LaboratoryInfoResp.class);
     }
 
-
     @Override
     public void deleteLaboratory(Long id) {
         Laboratory labFromDB = getLaboratoryFromDB(id);
@@ -80,11 +79,10 @@ public class LaboratoryServiceImpl implements LaboratoryService {
         laboratoryRepository.save(labFromDB);
     }
 
-
     @Override
     public List<LaboratoryInfoResp> getAllLaboratory(String status) {
         List<LaboratoryInfoResp> labRespList;
-        if (StringUtils.hasText(status)){
+        if (StringUtils.hasText(status)) {
 
             List<String> listStatus = getAllLabStatus().stream().map(Enum::name).collect(Collectors.toList());
             if (!listStatus.contains(status)) {
@@ -96,7 +94,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
                         .collect(Collectors.toList());
             }
 
-        }else {
+        } else {
             labRespList = laboratoryRepository.findAll().stream()
                     .map(lab -> objectMapper.convertValue(lab, LaboratoryInfoResp.class))
                     .collect(Collectors.toList());
@@ -109,8 +107,8 @@ public class LaboratoryServiceImpl implements LaboratoryService {
         Laboratory lab = getLaboratoryFromDB(id);
         LaboratoryInfoResp labResp = objectMapper.convertValue(lab, LaboratoryInfoResp.class);
 
-        List <Employee> employeeList = lab.getEmployeeList();
-        List <EmployeeInfoResp> respList = employeeList.stream()
+        List<Employee> employeeList = lab.getEmployeeList();
+        List<EmployeeInfoResp> respList = employeeList.stream()
                 .map(employee -> objectMapper.convertValue(employee, EmployeeInfoResp.class))
                 .collect(Collectors.toList());
 
@@ -119,7 +117,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     }
 
     @Override
-    public void updateLabListEmployee(Laboratory lab){
+    public void updateLabListEmployee(Laboratory lab) {
         laboratoryRepository.save(lab);
     }
 
@@ -129,7 +127,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     }
 
     @Override
-    public List<LaboratoryStatus> getAllLabStatus(){
+    public List<LaboratoryStatus> getAllLabStatus() {
         return Arrays.stream(LaboratoryStatus.values()).collect(Collectors.toList());
     }
 

@@ -10,7 +10,6 @@ import com.example.testcenter.model.dto.response.LaboratoryInfoResp;
 import com.example.testcenter.model.enums.LaboratoryStatus;
 import com.example.testcenter.service.TaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hibernate.tool.schema.spi.CommandAcceptanceException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -185,8 +184,8 @@ public class LaboratoryServiceImplTest {
     }
 
     @Test
-    public void updateLabListEmployee(){
-        Laboratory lab= new Laboratory();
+    public void updateLabListEmployee() {
+        Laboratory lab = new Laboratory();
         laboratoryService.updateLabListEmployee(lab);
         verify(laboratoryRepository, times(1)).save(lab);
     }

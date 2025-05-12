@@ -3,7 +3,6 @@ package com.example.testcenter.service.impl;
 import com.example.testcenter.exception.CommonBackendException;
 import com.example.testcenter.model.db.entity.EquipExam2;
 import com.example.testcenter.model.db.entity.Equipment;
-import com.example.testcenter.model.db.entity.Exam;
 import com.example.testcenter.model.db.repository.EquipmentRepository;
 import com.example.testcenter.model.dto.request.EquipmentInfoReq;
 import com.example.testcenter.model.dto.response.EquipExam2InfoResp;
@@ -12,7 +11,6 @@ import com.example.testcenter.model.dto.response.ExamInfoResp;
 import com.example.testcenter.model.enums.EquipStatus;
 import com.example.testcenter.model.enums.TypeEquipment;
 import com.example.testcenter.service.EquipExam2Service;
-import com.example.testcenter.service.EquipmentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -156,7 +154,7 @@ public class EquipmentServiceImplTest {
         equip.setId(1L);
 
         when(equipmentRepository.findById(anyLong())).thenReturn(Optional.of(equip));
-        List<EquipExam2InfoResp> equipExamRespList = equipmentService.addEquipmentExams(equip.getId(),examRespList);
+        List<EquipExam2InfoResp> equipExamRespList = equipmentService.addEquipmentExams(equip.getId(), examRespList);
 
         assertEquals(examRespList.size(), equipExamRespList.size());
         equipExamRespList.forEach(equipExamResp -> {

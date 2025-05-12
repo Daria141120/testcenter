@@ -27,8 +27,8 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
 
     @Override
-    public Client getClientFromDB(Long id){
-        Optional <Client> client = clientRepository.findById(id);
+    public Client getClientFromDB(Long id) {
+        Optional<Client> client = clientRepository.findById(id);
         final String errMsg = String.format("client with id : %s not found", id);
         return client.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
     }
@@ -61,11 +61,11 @@ public class ClientServiceImpl implements ClientService {
         Client clientFromDB = getClientFromDB(id);
         Client clientForUpdate = objectMapper.convertValue(req, Client.class);
 
-        clientFromDB.setEmail( clientForUpdate.getEmail() == null ? clientFromDB.getEmail() : clientForUpdate.getEmail());
-        clientFromDB.setPhone( clientForUpdate.getPhone() == null ? clientFromDB.getPhone() : clientForUpdate.getPhone());
-        clientFromDB.setFirstName( clientForUpdate.getFirstName() == null ? clientFromDB.getFirstName() : clientForUpdate.getFirstName());
-        clientFromDB.setLastName( clientForUpdate.getLastName() == null ? clientFromDB.getLastName() : clientForUpdate.getLastName());
-        clientFromDB.setMiddleName( clientForUpdate.getMiddleName() == null ? clientFromDB.getMiddleName() : clientForUpdate.getMiddleName());
+        clientFromDB.setEmail(clientForUpdate.getEmail() == null ? clientFromDB.getEmail() : clientForUpdate.getEmail());
+        clientFromDB.setPhone(clientForUpdate.getPhone() == null ? clientFromDB.getPhone() : clientForUpdate.getPhone());
+        clientFromDB.setFirstName(clientForUpdate.getFirstName() == null ? clientFromDB.getFirstName() : clientForUpdate.getFirstName());
+        clientFromDB.setLastName(clientForUpdate.getLastName() == null ? clientFromDB.getLastName() : clientForUpdate.getLastName());
+        clientFromDB.setMiddleName(clientForUpdate.getMiddleName() == null ? clientFromDB.getMiddleName() : clientForUpdate.getMiddleName());
 
         clientFromDB.setStatus(ClientStatus.UPDATED);
         clientFromDB = clientRepository.save(clientFromDB);

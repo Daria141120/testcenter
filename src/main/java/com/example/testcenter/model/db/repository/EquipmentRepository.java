@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface EquipmentRepository extends JpaRepository <Equipment, Long> {
 
-
     Optional<Equipment> findFirstByName(String name);
+
 }

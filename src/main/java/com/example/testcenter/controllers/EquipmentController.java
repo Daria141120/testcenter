@@ -65,7 +65,6 @@ public class EquipmentController {
         return equipmentService.getEquipmentExams(id);
     }
 
-
     @PutMapping("/{id}/equipmentsAdd")
     @Operation(summary = "Добавить испытания к оборудованию")
     public List<EquipExam2InfoResp> addEquipmentExams(@PathVariable("id") Long id, @RequestBody @Valid List <ExamInfoResp> examsRespList){

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public final class JwtUserDetailsFactory {
 
-    public static JwtUserDetails create(User user){
+    public static JwtUserDetails create(User user) {
         return new JwtUserDetails(
                 user.getUsername(),
                 user.getPassword(),
@@ -20,7 +20,7 @@ public final class JwtUserDetailsFactory {
         );
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> roles){
+    private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> roles) {
         return roles.stream()
                 .map(Enum::name)
                 .map(SimpleGrantedAuthority::new)

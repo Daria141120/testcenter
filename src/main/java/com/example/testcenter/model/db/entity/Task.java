@@ -17,9 +17,7 @@ import java.time.LocalDateTime;
 public class Task {
 
     @Id
-   // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @OneToOne (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @MapsId
@@ -33,7 +31,6 @@ public class Task {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
-
 
     @CreationTimestamp
     @Column(name = "created_at")

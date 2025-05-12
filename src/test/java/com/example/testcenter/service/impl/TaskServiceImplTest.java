@@ -10,7 +10,6 @@ import com.example.testcenter.model.dto.response.EmployeeInfoResp;
 import com.example.testcenter.model.dto.response.OrderItemInfoResp;
 import com.example.testcenter.model.dto.response.TaskInfoResp;
 import com.example.testcenter.model.enums.EmployeeStatus;
-import com.example.testcenter.model.enums.OrderStatus;
 import com.example.testcenter.model.enums.TaskStatus;
 import com.example.testcenter.service.ClientOrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,8 +22,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,7 +93,7 @@ public class TaskServiceImplTest {
 
         when(entityManager.merge(any(Task.class))).thenReturn(task);
         TaskInfoResp taskResp = taskService.addTask(req);
-        assertEquals(task.getId(),taskResp.getId());
+        assertEquals(task.getId(), taskResp.getId());
         assertEquals(req.getOrderItem().getId(), taskResp.getOrderItem().getId());
     }
 
@@ -116,7 +113,7 @@ public class TaskServiceImplTest {
 
         when(entityManager.merge(any(Task.class))).thenReturn(task);
         TaskInfoResp taskResp = taskService.addTask(req);
-        assertEquals(task.getId(),taskResp.getId());
+        assertEquals(task.getId(), taskResp.getId());
         assertEquals(req.getEmployee().getLastName(), taskResp.getEmployee().getLastName());
     }
 

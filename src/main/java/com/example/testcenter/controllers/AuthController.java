@@ -6,7 +6,6 @@ import com.example.testcenter.model.dto.auth.JwtResponse;
 import com.example.testcenter.model.dto.request.UserInfoReq;
 import com.example.testcenter.model.dto.response.UserInfoResp;
 import com.example.testcenter.service.AuthService;
-import com.example.testcenter.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,7 +42,7 @@ public class AuthController {
 
     @PostMapping("/refresh")
     @PreAuthorize("isAuthenticated()")
-    @Operation(summary = "Обновлнение пары токенов пользователя", security = @SecurityRequirement(name = AUTHORIZATION))
+    @Operation(summary = "Обновление пары токенов пользователя", security = @SecurityRequirement(name = AUTHORIZATION))
     public JwtResponse refresh(@RequestBody String refreshToken) {
         return authService.refresh(refreshToken);
     }

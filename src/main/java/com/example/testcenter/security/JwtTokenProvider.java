@@ -53,6 +53,7 @@ public class JwtTokenProvider {
                     .compact();
     }
 
+
     public String createRefreshToken(String username){
         Date issuedDate = new Date();
         Date expiredRefreshDate =  new Date(System.currentTimeMillis() + jwtProperties.getRefreshTime());
@@ -82,11 +83,13 @@ public class JwtTokenProvider {
         return jwtResponse;
     }
 
+
     public boolean isValidToken(String token){
         return getAllClaimsFromToken(token)
                 .getExpiration()
                 .after(new Date());
     }
+
 
     public String getUsername(String token){
         return getAllClaimsFromToken(token)
