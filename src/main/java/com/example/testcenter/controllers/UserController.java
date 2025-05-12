@@ -39,9 +39,9 @@ public class UserController {
 
 
     @PutMapping("/{id}")
-    @Operation(summary = "Обновить даннные пользователя по id")
-    public UserInfoResp updateUser(@PathVariable ("id") Long id, @RequestBody UserInfoReq req, Principal principal){
-       return userService.updateUser(id, req, principal);
+    @Operation(summary = "Обновить пароль")
+    public UserInfoResp updateUser(@PathVariable ("id") Long id, @RequestBody String password, Principal principal){
+       return userService.updateUser(id, password, principal);
     }
 
 

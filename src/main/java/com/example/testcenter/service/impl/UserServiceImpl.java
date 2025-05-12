@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createAdmin() {
-        if (!userRepository.findByUsername(adminLogin).isPresent()) {
+        if ( !userRepository.findByUsername(adminLogin).isPresent()) {
             User admin = new User();
             admin.setUsername(adminLogin);
             admin.setPassword(passwordEncoder.encode(password));
@@ -84,7 +84,8 @@ public class UserServiceImpl implements UserService {
         return resp;
     }
 
-    private User getUserFromDB(Long id) {
+    @Override
+    public User getUserFromDB(Long id) {
         Optional<User> user = userRepository.findById(id);
         final String errMsg = String.format("user with id : %s not found", id);
         return user.orElseThrow(() -> new CommonBackendException(errMsg, HttpStatus.NOT_FOUND));
@@ -92,18 +93,15 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserInfoResp updateUser(Long id, UserInfoReq req, Principal principal) {
+    public UserInfoResp updateUser(Long id, String password, Principal principal) {
         User userFromDB = getUserFromDB(id);
         if (!userFromDB.getUsername().equals(principal.getName())){
             throw new CommonBackendException("Access denied!", HttpStatus.FORBIDDEN);
         }
 
-        User userForUpdate = new User();
-        userForUpdate.setUsername(req.getUsername());
-        userForUpdate.setPassword(passwordEncoder.encode(req.getPassword()));
-        userFromDB.setUsername(req.getUsername() == null ? userFromDB.getUsername() : userForUpdate.getUsername());
-        userFromDB.setPassword(req.getPassword() == null ? userFromDB.getPassword() : userForUpdate.getPassword());
-
+        String newPassword = passwordEncoder.encode(password);
+        userFromDB.setPassword(newPassword);
+        userFromDB = userRepository.save(userFromDB);
         return new UserInfoResp(userFromDB.getId(), userFromDB.getUsername());
     }
 

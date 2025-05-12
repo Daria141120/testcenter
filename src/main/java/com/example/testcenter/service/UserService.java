@@ -18,7 +18,9 @@ public interface UserService {
 
     UserInfoResp getUser(Long id);
 
-    UserInfoResp updateUser(Long id, UserInfoReq req, Principal principal);
+    User getUserFromDB(Long id);
+
+    UserInfoResp updateUser(Long id, String req, Principal principal);
 
     void deleteUser(Long id);
 
